@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cluster & Cloud Computing — Study Tool</title>
+    <title>Cluster &amp; Cloud Computing Study Tool</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -207,6 +207,37 @@
         line-height: 1.7;
       }
 
+      .formula {
+        background: var(--dark);
+        color: #e2e8f0;
+        font-family: "SFMono-Regular", Consolas, monospace;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        margin: 12px 0;
+        overflow-x: auto;
+      }
+
+      .qtype {
+        display: inline-block;
+        font-family: var(--disp);
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 4px 10px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+      }
+      .qtype.single {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+      }
+      .qtype.multi {
+        background: var(--warning-light);
+        color: #92400e;
+      }
+
       .option-group {
         margin: 20px 0;
       }
@@ -222,16 +253,20 @@
         cursor: pointer;
         transition: all 0.2s;
         font-size: 14px;
+        line-height: 1.5;
       }
       .option-group label:hover {
         background: #fff;
         border-color: var(--primary);
       }
-      .option-group input[type="radio"] {
+      .option-group input[type="radio"],
+      .option-group input[type="checkbox"] {
         margin-top: 3px;
         cursor: pointer;
         accent-color: var(--primary);
         flex-shrink: 0;
+        width: 16px;
+        height: 16px;
       }
       .option-group label.correct {
         background: var(--success-light);
@@ -241,15 +276,72 @@
         background: var(--danger-light);
         border-color: var(--danger);
       }
-      .option-group label:disabled {
-        opacity: 0.6;
+      .option-group label.locked {
         cursor: default;
+        pointer-events: none;
+      }
+
+      /* Cover the answers until the user uncovers them to answer */
+      .cover-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-family: var(--disp);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--primary-dark);
+        background: var(--primary-light);
+        border: 1.5px solid var(--primary);
+        border-radius: 8px;
+        padding: 9px 14px;
+        margin: 18px 0 4px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .cover-toggle input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary);
+        cursor: pointer;
+      }
+      .opt-shell {
+        position: relative;
+        margin: 12px 0 4px;
+      }
+      .opt-list {
+        transition: filter 0.2s;
+      }
+      .opt-shell.covered .opt-list {
+        filter: blur(7px);
+        pointer-events: none;
+        user-select: none;
+      }
+      .cover-veil {
+        display: none;
+        position: absolute;
+        inset: 0;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border: 1.5px dashed var(--primary);
+        border-radius: 10px;
+        background: rgba(219, 234, 254, 0.55);
+        font-family: var(--disp);
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--primary-dark);
+        padding: 16px;
+        z-index: 2;
+      }
+      .opt-shell.covered .cover-veil {
+        display: flex;
       }
 
       .button-row {
         display: flex;
         gap: 10px;
         margin-top: 20px;
+        flex-wrap: wrap;
       }
       .btn {
         padding: 11px 20px;
@@ -285,11 +377,11 @@
       }
 
       .feedback {
-        padding: 12px 14px;
+        padding: 14px 16px;
         border-radius: 8px;
-        margin-top: 12px;
+        margin-top: 16px;
         font-size: 13.5px;
-        line-height: 1.6;
+        line-height: 1.65;
         display: none;
       }
       .feedback.show {
@@ -304,6 +396,12 @@
         background: var(--danger-light);
         border-left: 3px solid var(--danger);
         color: #991b1b;
+      }
+      .feedback .explain {
+        display: block;
+        margin-top: 8px;
+        color: var(--text);
+        font-weight: 400;
       }
 
       .progress {
@@ -341,7 +439,9 @@
         display: flex;
         gap: 12px;
         align-items: center;
-        margin: 12px 0;
+        margin: 12px auto;
+        max-width: 360px;
+        text-align: left;
       }
       .stat-icon {
         width: 40px;
@@ -406,10 +506,12 @@
   <body>
     <div class="app">
       <div class="header">
-        <h1>Cluster & Cloud Computing</h1>
+        <h1>Cluster &amp; Cloud Computing</h1>
         <p>
-          Study scaling laws, cloud architectures, containerisation, Kubernetes,
-          serverless computing, and modern cloud practices.
+          Study scaling laws, HPC, cloud architectures, containerisation,
+          Kubernetes, serverless computing, big data, and cloud security. Each
+          topic has an in-depth briefing followed by a ten question exam style
+          quiz mixing single answer and multiple answer items.
         </p>
       </div>
 
@@ -424,83 +526,167 @@
           title: "Scaling & Performance Laws",
           learn: `
 <div class="card">
-  <h2>Two types of scaling</h2>
-  <div class="analogy"><strong>Vertical:</strong> <em>One person working faster. Buy a bigger processor, more RAM. Limits: physics (chips can only get so fast).</em></div>
-  <div class="analogy"><strong>Horizontal:</strong> <em>Hire more people. Add more machines. Scales further but HARDER to program (coordination, synchronisation).</em></div>
+  <h2>Two ways to make a system bigger</h2>
+  <div class="analogy"><strong>Vertical (scale up):</strong> <em>One worker doing the job faster. Buy a bigger processor, more cores, more RAM, faster storage. Simple to program because the code stays single machine, but it hits a wall: physics limits clock speed, a single box has a maximum socket and memory count, and the price climbs steeply at the top end.</em></div>
+  <div class="analogy"><strong>Horizontal (scale out):</strong> <em>Hire more workers. Add more machines and split the work across them. Scales almost without limit and uses cheap commodity nodes, but it is much harder to program: you now have to coordinate processes, synchronise shared state, tolerate partial failures, and pay for network communication.</em></div>
+  <p>The exam framing: vertical is limited but easy, horizontal is powerful but introduces the hard distributed systems problems (coordination, consistency, fault tolerance).</p>
 </div>
 
 <div class="card">
-  <h2>Amdahl's Law: the serial fraction kills parallelism</h2>
-  <p>Speed-up = 1 / (serial% + parallel%/cores)</p>
+  <h2>Amdahl's Law: the serial fraction is the ceiling</h2>
+  <p>If a fraction <em>s</em> of a program must run serially and the rest can be parallelised across <em>N</em> processors, the speed up is bounded.</p>
+  <div class="formula">Speedup = 1 / ( s + (1 - s) / N )</div>
   <div class="scenario">
-    <div class="scenario-prompt">Example:</div>
-    <div class="scenario-text">A program is 5% serial, 95% parallel. With 100 cores: Speed-up = 1/(0.05 + 0.95/100) = 17×. No matter how many cores, max is 20× (1/0.05).</div>
+    <div class="scenario-prompt">Worked example</div>
+    <div class="scenario-text">A program is 5% serial and 95% parallel. With 100 cores the speedup is 1 / (0.05 + 0.95/100) which is about 16.8 times. As N goes to infinity the speedup approaches 1 / 0.05 which is 20 times. Buying more than a few dozen cores barely helps.</div>
   </div>
-  <p><strong>Takeaway:</strong> Optimise the serial parts — they bottleneck everything.</p>
+  <p><strong>Takeaway:</strong> the serial portion dominates at scale, so the best return often comes from shrinking the serial fraction rather than adding hardware. Amdahl assumes a <em>fixed problem size</em>.</p>
 </div>
 
 <div class="card">
-  <h2>Gustafson-Barsis: scale the problem, not just processors</h2>
-  <p>Don't keep problem size fixed. With more cores, solve a BIGGER problem.</p>
-  <div class="analogy"><strong>Amdahl:</strong> <em>Fixed job, many workers — diminishing returns.</em></div>
-  <div class="analogy"><strong>Gustafson:</strong> <em>More workers → bigger job → linear speed-up possible.</em></div>
+  <h2>Gustafson and Barsis: scale the problem, not just the processors</h2>
+  <p>Gustafson observed that in practice we do not keep the problem fixed. Given more processors, scientists solve a bigger problem in the same time, and the parallel part grows with the problem while the serial setup stays roughly constant.</p>
+  <div class="analogy"><strong>Amdahl view:</strong> <em>Fixed job, more workers, diminishing returns (strong scaling).</em></div>
+  <div class="analogy"><strong>Gustafson view:</strong> <em>More workers, proportionally bigger job, near linear speedup is achievable (weak scaling).</em></div>
+  <p>Strong scaling holds the total work fixed and adds processors. Weak scaling grows the work in step with the processor count so the work per processor stays constant.</p>
 </div>
 
 <div class="card">
-  <h2>Flynn's Taxonomy: hardware parallelism types</h2>
+  <h2>Flynn's Taxonomy: classifying hardware parallelism</h2>
   <div class="concept-row">
     <div class="concept-label">SISD</div>
-    <div class="concept-desc">Single Instruction Single Data — your laptop, one core</div>
+    <div class="concept-desc">Single Instruction Single Data. One instruction stream over one data stream, the classic single core sequential machine.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">SIMD</div>
-    <div class="concept-desc">Single Instruction Multiple Data — GPU: one operation on 1000 data points in parallel</div>
+    <div class="concept-desc">Single Instruction Multiple Data. One operation applied to many data elements at once. GPUs and vector units are the textbook example, ideal for data parallel maths.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">MIMD</div>
-    <div class="concept-desc">Multiple Instructions Multiple Data — multi-core CPU, cluster: each core does its own thing</div>
+    <div class="concept-desc">Multiple Instruction Multiple Data. Each processor runs its own instruction stream on its own data. Multi core CPUs and clusters fall here.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">MISD</div>
-    <div class="concept-desc">Rare in practice; redundant processors for fault tolerance</div>
+    <div class="concept-desc">Multiple Instruction Single Data. Rare. Mainly used for redundancy and fault tolerance, for example flight control systems voting on the same input.</div>
   </div>
+</div>
+
+<div class="card">
+  <h2>Performance vocabulary</h2>
+  <ul>
+    <li><strong>Latency:</strong> time to complete one task.</li>
+    <li><strong>Throughput:</strong> number of tasks completed per unit time.</li>
+    <li><strong>Speedup:</strong> time on one processor divided by time on N processors.</li>
+    <li><strong>Efficiency:</strong> speedup divided by N, how well you use each processor.</li>
+  </ul>
+  <p>Adding processors usually lowers efficiency because of communication and synchronisation overhead, which is exactly what Amdahl captures.</p>
 </div>
 `,
           quiz: [
             {
-              q: "If a program is 10% serial and 90% parallel, what is the maximum speed-up (Amdahl)?",
-              o: ["10×", "50×", "90×", "Unbounded"],
+              type: "single",
+              q: "If a program is 10% serial and 90% parallel, what is the maximum possible speedup under Amdahl's Law (with unlimited processors)?",
+              o: ["10 times", "50 times", "90 times", "Unbounded"],
               a: 0,
+              e: "As N goes to infinity, speedup approaches 1/s. Here s = 0.10, so the ceiling is 1/0.10 = 10 times no matter how many cores you add.",
             },
             {
-              q: "Gustafson-Barsis solves Amdahl limitation by...",
+              type: "single",
+              q: "Gustafson and Barsis address the pessimism of Amdahl's Law by changing which assumption?",
               o: [
-                "Using bigger processors",
-                "Scaling the problem size along with processors",
-                "Removing serial code",
-                "Ignoring latency",
+                "That processors run at the same clock speed",
+                "That the problem size stays fixed as processors are added",
+                "That the serial fraction can be removed entirely",
+                "That communication has zero cost",
               ],
               a: 1,
+              e: "Amdahl fixes the problem size (strong scaling). Gustafson assumes you grow the problem with the processor count (weak scaling), so the parallel work grows and near linear speedup becomes possible.",
             },
             {
-              q: "SIMD parallelism (like a GPU) is best for...",
+              type: "multi",
+              q: "Which of the following are examples of vertical scaling (scale up)?",
               o: [
-                "Different operations on different data",
-                "Same operation on many data points",
-                "Sequential tasks",
-                "Multi-threaded servers",
+                "Replacing a CPU with one that has more cores and higher clock speed",
+                "Adding more RAM to an existing server",
+                "Adding ten more identical servers behind a load balancer",
+                "Upgrading to faster NVMe storage on the same machine",
               ],
-              a: 1,
+              a: [0, 1, 3],
+              e: "Vertical scaling makes a single machine more powerful (more cores, more RAM, faster disk). Adding more separate servers is horizontal scaling.",
             },
             {
-              q: "Why is horizontal scaling (adding more machines) harder to program than vertical?",
+              type: "multi",
+              q: "Which statements about Amdahl's Law are correct?",
               o: [
-                "Bigger machines are slower",
-                "Coordination, synchronisation, and network communication become complex",
-                "Horizontal is actually easier",
-                "More machines mean fewer CPUs",
+                "It assumes a fixed total problem size",
+                "Speedup is ultimately limited by the serial fraction",
+                "It guarantees linear speedup with enough processors",
+                "Reducing the serial fraction raises the speedup ceiling",
+              ],
+              a: [0, 1, 3],
+              e: "Amdahl fixes the problem size and shows the serial fraction caps speedup at 1/s. It never promises linear speedup. Cutting the serial fraction raises that ceiling.",
+            },
+            {
+              type: "single",
+              q: "A GPU applying the same arithmetic operation to thousands of pixels simultaneously is an example of which Flynn category?",
+              o: ["SISD", "SIMD", "MIMD", "MISD"],
+              a: 1,
+              e: "One instruction acting on many data elements at once is Single Instruction Multiple Data, the defining pattern of GPU and vector hardware.",
+            },
+            {
+              type: "single",
+              q: "Parallel efficiency is defined as speedup divided by the number of processors. If 8 processors give a speedup of 6, efficiency is closest to:",
+              o: ["48%", "75%", "133%", "86%"],
+              a: 1,
+              e: "Efficiency = speedup / N = 6 / 8 = 0.75, or 75%. It measures how well each processor is being used.",
+            },
+            {
+              type: "multi",
+              q: "Which of the following correctly describe horizontal scaling compared to vertical scaling?",
+              o: [
+                "It can grow far beyond the limits of a single machine",
+                "It typically uses cheaper commodity nodes",
+                "It is generally easier to program than scaling up",
+                "It introduces coordination, synchronisation, and partial failure problems",
+              ],
+              a: [0, 1, 3],
+              e: "Horizontal scaling is more scalable and uses commodity hardware, but it is harder, not easier, to program because of distributed systems concerns.",
+            },
+            {
+              type: "single",
+              q: "Holding the total amount of work fixed while increasing the processor count is the definition of:",
+              o: [
+                "Weak scaling",
+                "Strong scaling",
+                "Vertical scaling",
+                "Throughput scaling",
               ],
               a: 1,
+              e: "Strong scaling fixes the work and adds processors (the Amdahl scenario). Weak scaling grows the work in step with processors so work per processor is constant.",
+            },
+            {
+              type: "multi",
+              q: "Which workloads or machines are best classified as MIMD?",
+              o: [
+                "A multi core CPU where each core runs a different thread",
+                "A compute cluster where each node runs its own program on its own data",
+                "A vector unit applying one operation across an array",
+                "A single core laptop running one sequential program",
+              ],
+              a: [0, 1],
+              e: "MIMD means multiple independent instruction streams over multiple data streams: multi core CPUs and clusters. The vector unit is SIMD and the single core sequential program is SISD.",
+            },
+            {
+              type: "single",
+              q: "A program is 20% serial. Going from 10 to 1000 processors barely improves the speedup. The best explanation is:",
+              o: [
+                "The network is saturated",
+                "The serial fraction caps speedup near 1/0.2 = 5 times, so extra cores add little",
+                "Efficiency improves with more cores",
+                "Gustafson's Law forbids further speedup",
+              ],
+              a: 1,
+              e: "With s = 0.2 the Amdahl ceiling is 5 times. By 10 cores you are already close to it, so adding hundreds more gives almost nothing for a fixed problem size.",
             },
           ],
         },
@@ -510,85 +696,186 @@
           title: "HPC: SPARTAN & MPI",
           learn: `
 <div class="card">
-  <h2>SPARTAN: supercomputer at UniMelb</h2>
-  <p>A Linux-based HPC cluster optimised for tightly coupled parallel jobs (HPC), not independent job queueing (HTC).</p>
+  <h2>SPARTAN: the University of Melbourne HPC cluster</h2>
+  <p>SPARTAN is a Linux based High Performance Computing cluster. HPC targets tightly coupled parallel jobs that communicate heavily, in contrast to High Throughput Computing (HTC) which runs many independent jobs that rarely talk to each other.</p>
   <div class="concept-row">
-    <div class="concept-label">Logon node</div>
-    <div class="concept-desc">Where you SSH in. No compute runs here (shared by all users).</div>
+    <div class="concept-label">Login node</div>
+    <div class="concept-desc">Where you SSH in to edit files and submit jobs. It is shared by everyone, so you must not run heavy compute here.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Worker nodes</div>
-    <div class="concept-desc">Where jobs actually run. Allocated by SLURM.</div>
+    <div class="concept-desc">Where jobs actually execute. The scheduler allocates them to your job for its lifetime.</div>
   </div>
   <div class="concept-row">
-    <div class="concept-label">Storage</div>
-    <div class="concept-desc">Shared parallel filesystem (GPFS). All nodes see the same /home and /data.</div>
+    <div class="concept-label">Shared filesystem</div>
+    <div class="concept-desc">A parallel filesystem visible from every node, so all nodes see the same home and data directories with no manual copying.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">SLURM</div>
-    <div class="concept-desc">Job scheduler. You submit scripts with #SBATCH directives, SLURM allocates nodes.</div>
+    <div class="concept-desc">The batch job scheduler. You submit a script with SBATCH directives and SLURM queues it, allocates resources, and runs it.</div>
   </div>
 </div>
 
 <div class="card">
-  <h2>MPI: distributed-memory parallel programming</h2>
-  <p>Message Passing Interface. Each process has its own memory; data moves by explicit messages.</p>
-  <div class="analogy"><strong>MPI_INIT:</strong> <em>All processes join the MPI world.</em></div>
-  <div class="analogy"><strong>MPI_SEND/MPI_RECV:</strong> <em>Point-to-point messages between processes.</em></div>
-  <div class="analogy"><strong>MPI_BCAST/MPI_REDUCE:</strong> <em>Collective operations: broadcast to all, gather results.</em></div>
-  <p><strong>Key:</strong> Process 0 often orchestrates; other ranks do independent work, then sync at reduction.</p>
+  <h2>SLURM: what a job script declares</h2>
+  <p>A SLURM script is a normal shell script with SBATCH directives at the top. Those directives request resources from the scheduler.</p>
+  <ul>
+    <li>Select a partition (a named pool of nodes).</li>
+    <li>Request the number of nodes, tasks, and CPUs per task.</li>
+    <li>Set a walltime limit (the maximum time the job may run).</li>
+    <li>Request memory and, if needed, GPUs.</li>
+    <li>Name output and error files, then run the actual commands.</li>
+  </ul>
+  <p>A SLURM script does not install software through sudo and does not give you interactive root on the cluster. It requests resources and launches work.</p>
 </div>
 
 <div class="card">
-  <h2>SLURM essentials</h2>
+  <h2>SLURM commands you must know</h2>
   <ul>
-    <li><span class="fill-box">sbatch job.slurm</span> — submit a batch script</li>
-    <li><span class="fill-box">squeue -u \$USER</span> — show your jobs (PD=pending, R=running, CG=completing)</li>
-    <li><span class="fill-box">sinfo</span> — show available partitions and node counts</li>
-    <li><span class="fill-box">scancel 12345</span> — kill a job</li>
+    <li><span class="fill-box">sbatch job.slurm</span> submit a batch script to the queue.</li>
+    <li><span class="fill-box">squeue -u $USER</span> list your jobs. PD means pending, R means running, CG means completing.</li>
+    <li><span class="fill-box">sinfo</span> show partitions and node availability.</li>
+    <li><span class="fill-box">scancel 12345</span> cancel a queued or running job by id.</li>
+    <li><span class="fill-box">srun</span> launch a job step, often used to start parallel tasks within an allocation.</li>
   </ul>
+</div>
+
+<div class="card">
+  <h2>MPI: distributed memory parallel programming</h2>
+  <p>Message Passing Interface is the standard for programming across nodes that do not share memory. Each process has private memory and a unique rank, and data moves only through explicit messages.</p>
+  <div class="concept-row">
+    <div class="concept-label">MPI_Init</div>
+    <div class="concept-desc">Starts the MPI environment so processes can communicate. MPI_Finalize shuts it down.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">MPI_Comm_size</div>
+    <div class="concept-desc">Returns how many processes are in the communicator.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">MPI_Comm_rank</div>
+    <div class="concept-desc">Returns the calling process's own id within the communicator, so each process knows which slice of work is its own.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">MPI_Send / MPI_Recv</div>
+    <div class="concept-desc">Point to point messages between two named processes.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">MPI_Bcast / MPI_Scatter / MPI_Gather / MPI_Reduce</div>
+    <div class="concept-desc">Collective operations across all processes: broadcast one value to all, scatter pieces of an array, gather pieces back, or reduce many values into one (for example a global sum).</div>
+  </div>
+  <p>Note that Init, Rank, Size, Scatter, and Reduce are MPI calls. There is no MPI function literally called Collect.</p>
 </div>
 `,
           quiz: [
             {
-              q: "SPARTAN logon nodes are shared by all users. Should you run compute jobs there?",
+              type: "single",
+              q: "You need to run a four hour parallel simulation on SPARTAN. Why must you not run it directly on the login node?",
               o: [
-                "Yes, it is fastest",
-                "No — degrades service for others. Use sbatch to run on worker nodes",
-                "Only small jobs",
-                "It does not matter",
+                "Login nodes have no CPUs",
+                "The login node is shared by all users, so heavy compute degrades service for everyone; submit through SLURM to the worker nodes",
+                "SSH cannot launch programs",
+                "The login node has no access to your files",
               ],
               a: 1,
+              e: "Login nodes are a shared, limited resource for editing and job submission. Compute belongs on worker nodes, allocated by SLURM via sbatch.",
             },
             {
-              q: "In an MPI program, what does MPI_Comm_rank tell each process?",
+              type: "multi",
+              q: "Which of the following does a SLURM batch script typically support or specify?",
               o: [
-                "How many processes exist",
-                "Its own ID (rank) within the communicator",
-                "The IP address of the master",
-                "Whether it is on SPARTAN",
+                "Selecting a partition",
+                "Setting a walltime limit",
+                "Requesting the resources (nodes, CPUs, memory) required",
+                "Installing system software through sudo",
               ],
-              a: 1,
+              a: [0, 1, 2],
+              e: "SLURM scripts select partitions, set walltime, and request resources. They do not grant sudo or install system packages on the cluster.",
             },
             {
-              q: "What is the purpose of the SLURM #SBATCH directives?",
+              type: "single",
+              q: "In an MPI program, MPI_Comm_rank tells a process:",
               o: [
-                "Encrypt data",
-                "Request resources (nodes, time, partition) for the job",
-                "Compile the code",
-                "Start the MPI runtime",
+                "How many processes exist in total",
+                "Its own unique id within the communicator",
+                "The hostname of the login node",
+                "The amount of memory available",
               ],
               a: 1,
+              e: "MPI_Comm_rank returns the calling process's rank (its id). MPI_Comm_size returns the total number of processes.",
             },
             {
-              q: "SPARTAN uses a shared parallel filesystem so that...",
+              type: "multi",
+              q: "Which of the following are genuine MPI functions?",
+              o: ["MPI_Init", "MPI_Reduce", "MPI_Collect", "MPI_Scatter"],
+              a: [0, 1, 3],
+              e: "Init, Reduce, and Scatter are real MPI calls. There is no MPI_Collect; gathering data uses MPI_Gather.",
+            },
+            {
+              type: "single",
+              q: "Which Flynn-style execution model does MPI across cluster nodes follow?",
               o: [
-                "Files are encrypted",
-                "All nodes access the same /home and /data; no file copying needed",
-                "Storage is faster",
-                "Jobs can run in parallel only",
+                "Shared memory with implicit synchronisation",
+                "Distributed memory where each process owns private memory and shares data via explicit messages",
+                "Single instruction single data",
+                "A single global address space accessible by all processes",
               ],
               a: 1,
+              e: "MPI is the distributed memory model. Nothing is shared automatically; all data exchange is explicit message passing.",
+            },
+            {
+              type: "single",
+              q: "You run squeue -u $USER and your job shows state PD. This means the job is:",
+              o: [
+                "Pending in the queue, waiting for resources",
+                "Running right now",
+                "Completed and being cleaned up",
+                "Cancelled due to an error",
+              ],
+              a: 0,
+              e: "PD is pending, R is running, and CG is completing. A pending job is waiting for the scheduler to allocate the requested resources.",
+            },
+            {
+              type: "multi",
+              q: "Which statements distinguish HPC from HTC correctly?",
+              o: [
+                "HPC favours tightly coupled jobs with heavy inter process communication",
+                "HTC favours many independent jobs that rarely communicate",
+                "HPC always uses a single machine",
+                "HTC requires every job to use MPI",
+              ],
+              a: [0, 1],
+              e: "HPC is for tightly coupled, communication heavy parallel work; HTC is for large numbers of independent tasks. HPC spans many nodes, and HTC jobs need not use MPI.",
+            },
+            {
+              type: "single",
+              q: "A collective operation that combines a value from every process into a single result, such as a global sum, is:",
+              o: ["MPI_Bcast", "MPI_Reduce", "MPI_Send", "MPI_Comm_size"],
+              a: 1,
+              e: "MPI_Reduce combines values from all processes using an operator like sum or max. Bcast sends one value to all; Send is point to point.",
+            },
+            {
+              type: "multi",
+              q: "Which SLURM commands match their described purpose?",
+              o: [
+                "sbatch submits a batch script to the queue",
+                "scancel cancels a job by its id",
+                "sinfo shows partitions and node availability",
+                "squeue compiles the job's source code",
+              ],
+              a: [0, 1, 2],
+              e: "sbatch submits, scancel cancels, and sinfo reports partition state. squeue lists jobs; it does not compile anything.",
+            },
+            {
+              type: "single",
+              q: "SPARTAN exposes the same home and data directories on every node because it uses a shared parallel filesystem. The main practical benefit is:",
+              o: [
+                "Files are automatically encrypted",
+                "Any node can read and write the same data with no manual file copying between nodes",
+                "Jobs run faster regardless of code",
+                "Each node gets a private copy of all files",
+              ],
+              a: 1,
+              e: "A shared parallel filesystem means every worker node sees identical paths, so a multi node job can access input and output without staging copies around.",
             },
           ],
         },
@@ -598,90 +885,182 @@
           title: "Cloud Models & OpenStack",
           learn: `
 <div class="card">
-  <h2>The three cloud delivery models</h2>
+  <h2>The three cloud service models</h2>
+  <p>The models differ by how much the provider manages versus how much you manage.</p>
   <div class="scenario">
-    <div class="scenario-prompt">Who manages what?</div>
-    <div class="scenario-text"><span class="fill-box">IaaS (Infrastructure)</span>: You manage OS and above. Provider: virtualisation, servers, networking. <em>AWS EC2, MRC, OpenStack.</em></div>
+    <div class="scenario-prompt">IaaS (Infrastructure as a Service)</div>
+    <div class="scenario-text">You manage the operating system and everything above it. The provider runs the virtualisation, physical servers, storage, and networking. Examples: AWS EC2, the Melbourne Research Cloud, and OpenStack.</div>
   </div>
   <div class="scenario">
-    <div class="scenario-prompt"></div>
-    <div class="scenario-text"><span class="fill-box">PaaS (Platform)</span>: You manage code and data. Provider: runtime, middleware, OS, everything below. <em>Heroku, Google App Engine.</em></div>
+    <div class="scenario-prompt">PaaS (Platform as a Service)</div>
+    <div class="scenario-text">You manage only your code and data. The provider runs the runtime, middleware, operating system, and everything below. Examples: Heroku and Google App Engine.</div>
   </div>
   <div class="scenario">
-    <div class="scenario-prompt"></div>
-    <div class="scenario-text"><span class="fill-box">SaaS (Software)</span>: Everything is managed. You just use it. <em>Gmail, Office 365, Canvas.</em></div>
+    <div class="scenario-prompt">SaaS (Software as a Service)</div>
+    <div class="scenario-text">Everything is managed for you. You simply use the application. Examples: Gmail, Office 365, and Canvas.</div>
   </div>
 </div>
 
 <div class="card">
-  <h2>OpenStack architecture (MRC)</h2>
-  <p>Open-source IaaS platform. Melbourne Research Cloud runs on OpenStack.</p>
+  <h2>OpenStack: open source IaaS</h2>
+  <p>OpenStack is an open source platform for building IaaS clouds. The Melbourne Research Cloud (MRC) runs on it. It is made of cooperating services, each with its own job.</p>
   <div class="concept-row">
     <div class="concept-label">Nova</div>
-    <div class="concept-desc">Compute: launch and manage VM instances</div>
+    <div class="concept-desc">Compute. Launches and manages virtual machine instances.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Neutron</div>
-    <div class="concept-desc">Networking: virtual networks, floating IPs, security groups</div>
+    <div class="concept-desc">Networking. Virtual networks, routers, floating IPs, and security groups.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Cinder</div>
-    <div class="concept-desc">Block storage: persistent volumes for instances</div>
+    <div class="concept-desc">Block storage. Persistent volumes that attach to instances like virtual disks.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Swift</div>
-    <div class="concept-desc">Object storage: like AWS S3, buckets of objects via HTTP</div>
+    <div class="concept-desc">Object storage. Buckets of objects accessed over HTTP, comparable to AWS S3.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Keystone</div>
-    <div class="concept-desc">Identity: authentication and authorisation (every API call goes through it)</div>
+    <div class="concept-desc">Identity. Authentication and authorisation. Every API call is checked against it.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Horizon</div>
-    <div class="concept-desc">Web dashboard: user interface for launching instances</div>
+    <div class="concept-desc">Dashboard. The web interface for launching and managing resources.</div>
   </div>
+  <div class="concept-row">
+    <div class="concept-label">Glance</div>
+    <div class="concept-desc">Image service. Stores the VM images instances boot from.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Projects, tenants, and access</h2>
+  <p>In OpenStack a <em>project</em> (also called a tenant) is an organisational unit that owns resources and quotas. A user can belong to several projects, not just one.</p>
+  <div class="analogy"><strong>SSH keys matter:</strong> <em>Best practice is key based SSH rather than passwords. The private key stays securely with you and must never be emailed or shared through cloud storage. To reach an instance you present your private key, and the matching public key sits on the server.</em></div>
+</div>
+
+<div class="card">
+  <h2>The OpenRC file and volumes</h2>
+  <p>An OpenRC file holds the environment variables (such as your project, username, and authentication URL) needed by the OpenStack command line tools to talk to the APIs. You source it before running commands.</p>
+  <p>Operations you can perform on a Cinder volume include increasing its size, creating it from a snapshot, and converting it into an image. A standard volume attaches to one instance at a time in read write mode, so attaching the same volume to many instances simultaneously in read write is not a normal operation.</p>
 </div>
 `,
           quiz: [
             {
-              q: "In IaaS, the customer manages...",
+              type: "single",
+              q: "In the IaaS model, which layers are the customer's responsibility?",
               o: [
-                "Servers and networking only",
-                "OS and everything above",
-                "Only the application code",
-                "Everything (cloud provider has no role)",
+                "The physical servers and networking only",
+                "The operating system and everything above it",
+                "Only the application source code",
+                "Nothing; the provider manages the full stack",
               ],
               a: 1,
+              e: "In IaaS the provider supplies virtualised infrastructure (compute, storage, network) and the customer manages the OS, runtime, and applications on top.",
             },
             {
-              q: "OpenStack Keystone must be queried...",
+              type: "multi",
+              q: "In an OpenStack cloud, which of the following statements are true?",
               o: [
-                "Only for login",
-                "For every API call (authentication/authorisation first)",
-                "Never — it is optional",
-                "Only for storage operations",
+                "Projects are organisational units in the cloud, also known as tenants",
+                "A user can be a member of more than one project",
+                "It is acceptable to share a private key by email or cloud storage",
+                "To reach a server over SSH the private key should be kept securely by the user, not stored on the server",
+              ],
+              a: [0, 1, 3],
+              e: "Projects are tenants, and users can belong to several. Private keys must never be shared by email or cloud storage, and the private key stays with the user while only the public key goes on the server.",
+            },
+            {
+              type: "single",
+              q: "Why must OpenStack Keystone be involved in nearly every operation?",
+              o: [
+                "It stores all the data",
+                "It handles authentication and authorisation, which every API call must pass",
+                "It schedules the virtual machines",
+                "It provides the web dashboard",
               ],
               a: 1,
+              e: "Keystone is the identity service. Before any service acts on a request it validates the token with Keystone, so identity is checked on essentially every API call.",
             },
             {
-              q: "A floating IP in OpenStack is different from a fixed IP because...",
+              type: "multi",
+              q: "Which are valid operations you can perform on an OpenStack (Cinder) volume?",
               o: [
-                "It is always slower",
-                "It can be reassociated with a different instance instantly (no IP change)",
-                "It is private only",
-                "It only works with VMs",
+                "Increase the volume size",
+                "Create a volume from a snapshot",
+                "Convert the volume to an image",
+                "Attach one volume to many instances at the same time in read write mode",
+              ],
+              a: [0, 1, 2],
+              e: "Resizing, creating from a snapshot, and converting to an image are all supported. A standard block volume attaches to a single instance in read write mode, so simultaneous multi attach read write is not a normal operation.",
+            },
+            {
+              type: "single",
+              q: "What is the primary purpose of an OpenRC file in OpenStack?",
+              o: [
+                "To configure the instance's network interfaces",
+                "To store the environment variables needed to access the OpenStack APIs",
+                "To boot a virtual machine",
+                "To define firewall rules",
               ],
               a: 1,
+              e: "An OpenRC file exports environment variables such as project, username, and auth URL so the command line clients can authenticate and call the OpenStack APIs.",
             },
             {
-              q: "Cinder provides ___ storage, Swift provides ___ storage.",
+              type: "single",
+              q: "A floating IP differs from a fixed IP because it:",
               o: [
-                "Block, object",
-                "Object, block",
-                "Streaming, batch",
-                "Cache, database",
+                "Is always slower than a fixed IP",
+                "Can be reassociated to a different instance on demand without changing the instance's internal address",
+                "Only works on private networks",
+                "Cannot be used with virtual machines",
               ],
-              a: 0,
+              a: 1,
+              e: "A floating IP is a public address you can move between instances, which is useful for failover, while the instance keeps its fixed internal IP.",
+            },
+            {
+              type: "multi",
+              q: "Match the OpenStack service to a correct description. Which pairings are right?",
+              o: [
+                "Nova handles compute and launches instances",
+                "Swift provides object storage similar to S3",
+                "Neutron provides block storage volumes",
+                "Keystone provides identity, authentication, and authorisation",
+              ],
+              a: [0, 1, 3],
+              e: "Nova is compute, Swift is object storage, and Keystone is identity. Neutron is networking, not block storage; block storage is Cinder.",
+            },
+            {
+              type: "single",
+              q: "An application where the provider manages the runtime and OS while you deploy only your code and data is an example of:",
+              o: ["IaaS", "PaaS", "SaaS", "Bare metal hosting"],
+              a: 1,
+              e: "When you supply only code and data and the provider runs the platform beneath it (runtime, middleware, OS), that is Platform as a Service.",
+            },
+            {
+              type: "multi",
+              q: "Which of the following are accurate about block storage versus object storage in OpenStack?",
+              o: [
+                "Cinder provides block storage that attaches to instances like a disk",
+                "Swift provides object storage accessed over HTTP",
+                "Object storage is typically accessed by mounting it as a raw block device",
+                "Block volumes can be created from snapshots",
+              ],
+              a: [0, 1, 3],
+              e: "Cinder is block storage (disk like), Swift is object storage over HTTP, and volumes can come from snapshots. Object storage is accessed via an HTTP API, not mounted as a raw block device.",
+            },
+            {
+              type: "single",
+              q: "Best practice for accessing an OpenStack instance over SSH is to:",
+              o: [
+                "Use a shared password emailed to the team",
+                "Use key based authentication, keeping the private key secure and never sharing it",
+                "Store the private key on the public instance for convenience",
+                "Disable SSH and use the web console only",
+              ],
+              a: 1,
+              e: "Key based SSH is the standard. The private key stays protected with the user, only the public key is placed on the server, and keys are never emailed or stored in shared locations.",
             },
           ],
         },
@@ -691,88 +1070,178 @@
           title: "Containers & Docker vs VMs",
           learn: `
 <div class="card">
-  <h2>VMs vs Containers: the tradeoff</h2>
-  <div class="analogy"><strong>VMs:</strong> <em>Full houses. Each has its own kitchen, electricity, plumbing (guest OS). Isolated but HEAVY.</em></div>
-  <div class="analogy"><strong>Containers:</strong> <em>Rooms in one house. Share the kitchen, electricity, OS kernel. LIGHT but less isolated.</em></div>
-  <p><strong>Reality:</strong> Container = image + writable layer on a shared kernel. Can boot in ~1 second. VM boots in ~30 seconds (full OS startup).</p>
+  <h2>Virtual machines versus containers</h2>
+  <div class="analogy"><strong>Virtual machines:</strong> <em>Separate houses. Each VM runs a full guest operating system on top of a hypervisor, with its own kernel, drivers, and services. Strong isolation, but heavy: large images and slow boot because a whole OS starts up.</em></div>
+  <div class="analogy"><strong>Containers:</strong> <em>Rooms in one shared house. Containers share the host operating system kernel and isolate processes using namespaces and control groups. Lightweight and fast to start, but isolation is weaker than a full VM.</em></div>
+  <p><strong>Reality check:</strong> a container is an image plus a thin writable layer running on a shared kernel, so it can start in roughly a second. A VM commonly takes tens of seconds because it boots an entire guest OS.</p>
 </div>
 
 <div class="card">
-  <h2>Docker essentials</h2>
+  <h2>Bare metal versus hosted hypervisors</h2>
+  <p>A type 1 (bare metal) hypervisor runs directly on hardware. A type 2 (hosted) hypervisor runs as an application on top of a host operating system.</p>
+  <ul>
+    <li>Bare metal generally gives better performance because there is no host OS layer in the way.</li>
+    <li>Bare metal can be more secure because the attack surface of a general purpose host OS is removed.</li>
+    <li>Hosted hypervisors are easier to set up on an existing desktop and convenient for development.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>Docker building blocks</h2>
   <div class="concept-row">
     <div class="concept-label">Image</div>
-    <div class="concept-desc">Read-only template built in layers (FROM, COPY, RUN, etc.). Lives in a registry.</div>
+    <div class="concept-desc">A read only template built in layers. One image can spawn many containers. Stored in a registry.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Container</div>
-    <div class="concept-desc">Image + thin writable layer. Running instance of an image.</div>
+    <div class="concept-desc">A running instance of an image with a thin writable layer on top.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Dockerfile</div>
-    <div class="concept-desc">Recipe for building an image. Each instruction = one layer.</div>
+    <div class="concept-desc">The recipe for an image. Each instruction such as FROM, COPY, or RUN creates a layer.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Registry</div>
-    <div class="concept-desc">Repository of images (Docker Hub, private registries).</div>
+    <div class="concept-desc">A store of images, for example Docker Hub or a private registry.</div>
   </div>
 </div>
 
 <div class="card">
-  <h2>Layer caching trick</h2>
-  <p>Order matters! Put things that change least at the TOP:</p>
+  <h2>Layer caching: order your Dockerfile well</h2>
+  <p>Docker caches each layer and rebuilds from the first changed instruction onwards. Put the things that change least at the top.</p>
   <div class="scenario">
-    <div class="scenario-prompt">Good order:</div>
-    <div class="scenario-text">FROM python | COPY requirements.txt | RUN pip install | COPY code</div>
+    <div class="scenario-prompt">Good ordering</div>
+    <div class="scenario-text">FROM python, then COPY requirements.txt, then RUN pip install, then COPY the application code.</div>
   </div>
-  <p><em>Why?</em> If code changes, only the last layer rebuilds. If requirements change, RUN layer rebuilds once. Docker reuses cached layers.</p>
+  <p>If only your code changes, just the final layer rebuilds and the dependency install stays cached. Put the volatile code copy last to maximise cache reuse.</p>
 </div>
 
 <div class="card">
-  <h2>CI/CD in containers</h2>
-  <p>Modern pipelines: code → test → scan for vulnerabilities → build image → push to registry → deploy.</p>
-  <p>Scanning tools (Snyk, Docker Scout) check for CVEs (known security holes) in base images and dependencies.</p>
+  <h2>Containers in CI/CD</h2>
+  <p>A modern pipeline runs code, then tests, then a vulnerability scan, then builds the image, pushes it to a registry, and deploys it.</p>
+  <p>Scanners such as Docker Scout, Trivy, or Snyk look for known vulnerabilities (CVEs) in base images and dependencies so insecure images are caught before deployment.</p>
 </div>
 `,
           quiz: [
             {
-              q: "A container boots in ~1s, a VM in ~30s. The main reason is...",
+              type: "single",
+              q: "A container typically starts in about a second while a virtual machine takes tens of seconds. The main reason is:",
               o: [
-                "Containers use faster hardware",
-                "VMs must boot a full guest OS",
-                "Containers skip security",
-                "VMs are never actually slower",
+                "Containers run on faster hardware",
+                "A VM must boot an entire guest operating system, whereas a container shares the host kernel",
+                "Containers skip all security checks",
+                "VMs are never actually slower in practice",
               ],
               a: 1,
+              e: "Containers reuse the running host kernel and only add a thin process layer, so startup is fast. A VM boots a full guest OS first, which costs tens of seconds.",
             },
             {
-              q: "In a Dockerfile, why should dependencies (COPY requirements.txt, RUN pip install) come before application code?",
+              type: "multi",
+              q: "What are the benefits of bare metal (type 1) hypervisors compared with hosted (type 2) hypervisors?",
               o: [
-                "Alphabetical ordering",
-                "Dependencies change rarely; placing them early maximises cache reuse",
-                "Code is more important",
-                "The order does not matter",
+                "Better performance with no host OS layer in the path",
+                "Smaller attack surface, which can improve security",
+                "Easier to install on top of an everyday desktop OS",
+                "No hardware dependency at all",
               ],
-              a: 1,
+              a: [0, 1],
+              e: "Bare metal runs directly on hardware, giving better performance and a smaller attack surface. Easy desktop installation is an advantage of hosted hypervisors, not bare metal.",
             },
             {
-              q: "A container image is...",
+              type: "single",
+              q: "In a Dockerfile, why place COPY requirements.txt and RUN pip install before COPY of the application code?",
               o: [
-                "A running process",
-                "A read-only template that can spawn many containers",
-                "A permanent storage location",
-                "The same as a Dockerfile",
+                "Alphabetical order is required",
+                "Dependencies change rarely, so caching them early avoids reinstalling them every time only the code changes",
+                "Application code must always come first",
+                "The order has no effect",
               ],
               a: 1,
+              e: "Docker rebuilds from the first changed layer downward. Dependencies change less often than code, so installing them earlier keeps that expensive layer cached when only code changes.",
             },
             {
-              q: "Docker Scout scans for...",
+              type: "multi",
+              q: "Which statements about Docker images and containers are correct?",
               o: [
-                "Code style issues",
-                "Known security vulnerabilities (CVEs) in images and dependencies",
-                "Slow containers",
-                "Unoptimised networks",
+                "An image is a read only template",
+                "A single image can be used to start many containers",
+                "A container adds a thin writable layer on top of an image",
+                "A Dockerfile and an image are the same thing",
+              ],
+              a: [0, 1, 2],
+              e: "Images are read only templates that can spawn many containers, and each container adds a writable layer. A Dockerfile is the recipe that builds an image, not the image itself.",
+            },
+            {
+              type: "single",
+              q: "Which best describes how containers achieve isolation?",
+              o: [
+                "Each container runs its own full guest kernel",
+                "Containers share the host kernel and isolate processes using namespaces and control groups",
+                "Containers use a dedicated hypervisor per process",
+                "Containers cannot be isolated from one another",
               ],
               a: 1,
+              e: "Containers share the host kernel; the isolation comes from kernel features like namespaces (separate views) and cgroups (resource limits), not from a separate guest kernel.",
+            },
+            {
+              type: "multi",
+              q: "Which tasks are typical stages of a container based CI/CD pipeline?",
+              o: [
+                "Run tests on the code",
+                "Scan the image for known vulnerabilities (CVEs)",
+                "Build and push the image to a registry",
+                "Manually copy binaries over SSH to each server",
+              ],
+              a: [0, 1, 2],
+              e: "Modern pipelines test, scan for CVEs, build, push to a registry, and deploy automatically. Hand copying binaries over SSH is exactly the manual practice automation replaces.",
+            },
+            {
+              type: "single",
+              q: "A registry such as Docker Hub primarily:",
+              o: [
+                "Runs containers on your behalf",
+                "Stores and distributes container images",
+                "Schedules pods across a cluster",
+                "Builds Dockerfiles automatically with no configuration",
+              ],
+              a: 1,
+              e: "A registry is a store for images that clients pull from and push to. Running containers and scheduling are done by the host or an orchestrator, not the registry.",
+            },
+            {
+              type: "multi",
+              q: "Which statements correctly compare VMs and containers?",
+              o: [
+                "VMs provide stronger isolation because each has its own kernel",
+                "Containers are generally more lightweight and start faster",
+                "Containers always provide stronger isolation than VMs",
+                "VM images are typically larger than container images",
+              ],
+              a: [0, 1, 3],
+              e: "VMs isolate more strongly (separate kernels) and have larger images; containers are lighter and faster. Containers do not provide stronger isolation than VMs.",
+            },
+            {
+              type: "single",
+              q: "Tools like Docker Scout, Trivy, and Snyk are used in pipelines to:",
+              o: [
+                "Format source code consistently",
+                "Detect known security vulnerabilities (CVEs) in images and dependencies",
+                "Reduce container startup time",
+                "Load balance network traffic",
+              ],
+              a: 1,
+              e: "These are image and dependency vulnerability scanners. They flag known CVEs so insecure images are caught before they ship.",
+            },
+            {
+              type: "single",
+              q: "You change one line of application code and rebuild. With a well ordered Dockerfile, which layers must rebuild?",
+              o: [
+                "Every layer from FROM onwards",
+                "Only the final code COPY layer and anything after it, because earlier dependency layers stay cached",
+                "Only the FROM layer",
+                "No layers, the image is unchanged",
+              ],
+              a: 1,
+              e: "Docker reuses cached layers up to the first change. With the code copy placed last, only that final layer (and any following it) rebuilds while the dependency layers remain cached.",
             },
           ],
         },
@@ -782,83 +1251,171 @@
           title: "Kubernetes: Container Orchestration",
           learn: `
 <div class="card">
-  <h2>Why Kubernetes?</h2>
-  <p>Manually running containers is chaos. K8s provides: scheduling, self-healing, scaling, rolling updates, declarative state.</p>
-  <div class="analogy"><strong>Without K8s:</strong> <em>You manually ssh into servers and run 'docker run'. If a container crashes, you re-run it. If load spikes, you manuall add containers.</em></div>
-  <div class="analogy"><strong>With K8s:</strong> <em>You declare "I want 5 replicas of this app". K8s keeps 5 running, replaces dead ones, scales on demand.</em></div>
+  <h2>Why orchestration is needed</h2>
+  <p>Running containers by hand across many machines is unmanageable. Kubernetes adds scheduling, self healing, scaling, rolling updates, service discovery, and a declarative model of desired state.</p>
+  <div class="analogy"><strong>Without Kubernetes:</strong> <em>You SSH into servers and run containers yourself. If one crashes you restart it manually, and if load rises you add containers by hand.</em></div>
+  <div class="analogy"><strong>With Kubernetes:</strong> <em>You declare that you want five replicas of an app. Kubernetes keeps five running, replaces failures, and can scale on demand.</em></div>
 </div>
 
 <div class="card">
-  <h2>K8s architecture</h2>
+  <h2>Cluster architecture</h2>
   <div class="concept-row">
-    <div class="concept-label">Control Plane</div>
-    <div class="concept-desc">The brain. API server, scheduler, controller-manager, etcd (database of state).</div>
+    <div class="concept-label">Control plane</div>
+    <div class="concept-desc">The brain. The API server is the front door, the scheduler places pods, controllers drive state, and etcd is the key value store holding cluster state.</div>
   </div>
   <div class="concept-row">
-    <div class="concept-label">Worker Nodes</div>
-    <div class="concept-desc">The muscle. Kubelet (agent) runs pods; kube-proxy (networking).</div>
+    <div class="concept-label">Worker nodes</div>
+    <div class="concept-desc">The muscle. The kubelet agent runs pods on the node and kube proxy handles pod networking.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Pod</div>
-    <div class="concept-desc">Smallest unit: one or more containers (usually one) sharing network/storage. EPHEMERAL — comes and goes.</div>
+    <div class="concept-desc">The smallest deployable unit. One or more tightly coupled containers sharing network and storage. Pods are ephemeral and get replaced.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">ReplicaSet</div>
+    <div class="concept-desc">Keeps a specified number of identical pod replicas running.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Deployment</div>
-    <div class="concept-desc">Says "keep N replicas of this pod running". Handles rolling updates.</div>
+    <div class="concept-desc">Manages ReplicaSets to give you declarative updates and rolling releases.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Service</div>
-    <div class="concept-desc">Stable virtual IP/DNS. Load-balances across pods that come and go.</div>
+    <div class="concept-desc">A stable virtual IP and DNS name that load balances across the changing set of pods behind it.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Ingress</div>
+    <div class="concept-desc">Routes external HTTP and HTTPS traffic to services based on host and path rules.</div>
   </div>
 </div>
 
 <div class="card">
-  <h2>Declarative vs Imperative</h2>
-  <div class="analogy"><strong>Imperative (old):</strong> <em>"Run this container on that server. Now update it. Now scale it." You give commands.</em></div>
-  <div class="analogy"><strong>Declarative (K8s):</strong> <em>"Here is a YAML describing desired state: 3 replicas, this image, this port. K8s makes reality match it."</em></div>
-  <p>K8s continuously watches reality and reconciles it with the YAML. If a pod dies, K8s sees "want 3, have 2" and launches a new one.</p>
+  <h2>Declarative versus imperative</h2>
+  <div class="analogy"><strong>Imperative:</strong> <em>You issue step by step commands. Run this container here, now update it, now scale it.</em></div>
+  <div class="analogy"><strong>Declarative:</strong> <em>You describe the desired state in YAML, for example three replicas of this image on this port, and Kubernetes makes reality match it.</em></div>
+  <p>Kubernetes constantly watches actual state and reconciles it toward the desired state. If a pod dies, a controller notices that it wants three but has two and creates a replacement automatically. This control loop is the heart of self healing.</p>
 </div>
 `,
           quiz: [
             {
-              q: "A Kubernetes Pod is...",
+              type: "single",
+              q: "Which best describes a Kubernetes Pod?",
               o: [
-                "A storage unit",
-                "The smallest deployable unit, usually containing one container",
-                "Permanent storage for data",
-                "An API endpoint",
+                "A persistent storage volume",
+                "The smallest deployable unit, holding one or more tightly coupled containers that share network and storage",
+                "A stable network endpoint for an app",
+                "A node in the cluster",
               ],
               a: 1,
+              e: "A Pod is the smallest deployable unit. It wraps one or more containers that share an IP and storage, and it is ephemeral, replaced rather than repaired.",
             },
             {
-              q: "A Deployment ensures...",
+              type: "multi",
+              q: "Which responsibilities belong to the Kubernetes control plane?",
               o: [
-                "Pods never fail",
-                "The desired number of replicas are always running",
-                "Containers are optimised",
-                "All nodes are the same",
+                "The API server acts as the front door to the cluster",
+                "The scheduler decides which node a pod runs on",
+                "etcd stores cluster state",
+                "The kubelet runs the actual pods on a worker node",
               ],
-              a: 1,
+              a: [0, 1, 2],
+              e: "API server, scheduler, controllers, and etcd are control plane components. The kubelet runs on worker nodes and executes pods, so it is not part of the control plane.",
             },
             {
-              q: "A Service in K8s provides...",
+              type: "single",
+              q: "What does a Deployment primarily guarantee?",
               o: [
-                "Storage",
-                "A stable IP/DNS that load-balances across ephemeral pods",
-                "Networking protocols only",
-                "Virtual machines",
+                "That pods can never crash",
+                "That the desired number of replicas is maintained and updates roll out in a controlled way",
+                "That every node runs identical hardware",
+                "That storage is encrypted",
               ],
               a: 1,
+              e: "A Deployment manages ReplicaSets to keep the requested replica count running and to perform rolling updates. It cannot prevent crashes, but it replaces failed pods.",
             },
             {
-              q: "Declarative K8s management means...",
+              type: "single",
+              q: "Why does a Service exist if pods already have IP addresses?",
               o: [
-                "You manually run commands for every change",
-                "You describe desired state in YAML; K8s continuously reconciles reality",
-                "You use imperative APIs only",
-                "Commands are forbidden",
+                "Pods cannot communicate at all without a Service",
+                "Pods are ephemeral with changing IPs, so a Service gives a stable address and load balances across them",
+                "A Service stores persistent data for pods",
+                "A Service replaces the need for a Deployment",
               ],
               a: 1,
+              e: "Pod IPs change as pods come and go. A Service provides a stable virtual IP and DNS name and load balances traffic across the current healthy pods.",
+            },
+            {
+              type: "multi",
+              q: "Which statements about declarative management in Kubernetes are correct?",
+              o: [
+                "You describe the desired state, usually in YAML",
+                "A control loop continuously reconciles actual state toward desired state",
+                "If a pod dies, Kubernetes can recreate it automatically",
+                "You must manually issue a command for every individual change",
+              ],
+              a: [0, 1, 2],
+              e: "Declarative means you state the desired end state and Kubernetes reconciles toward it, recreating failed pods automatically. Issuing a command for every change is the imperative style.",
+            },
+            {
+              type: "single",
+              q: "A pod is deleted but its Deployment specifies three replicas. What happens?",
+              o: [
+                "Nothing, the count drops to two permanently",
+                "A controller observes the gap between desired (3) and actual (2) and creates a replacement pod",
+                "The whole Deployment is deleted",
+                "The Service stops working",
+              ],
+              a: 1,
+              e: "The reconciliation loop sees desired 3 but actual 2 and schedules a new pod to restore the count. This is self healing in action.",
+            },
+            {
+              type: "multi",
+              q: "Which Kubernetes objects or components are correctly described?",
+              o: [
+                "A ReplicaSet keeps a set number of identical pods running",
+                "An Ingress routes external HTTP traffic to services by host and path",
+                "kube proxy handles pod networking on a node",
+                "etcd runs the application containers",
+              ],
+              a: [0, 1, 2],
+              e: "ReplicaSet maintains replicas, Ingress routes external HTTP, and kube proxy handles node networking. etcd is the cluster's key value store, it does not run application containers.",
+            },
+            {
+              type: "single",
+              q: "Pods in Kubernetes are described as ephemeral. What does this imply for application design?",
+              o: [
+                "Pods keep their identity and IP forever",
+                "Applications should not rely on a pod's local disk or IP persisting, since pods are replaced",
+                "Pods can never be restarted",
+                "Each pod must run on its own dedicated node",
+              ],
+              a: 1,
+              e: "Because pods are routinely replaced, their local storage and IP are not durable. Persistent data belongs in volumes, and stable addressing comes from Services.",
+            },
+            {
+              type: "single",
+              q: "How can you connect an external HTTP request to the right backend in Kubernetes?",
+              o: [
+                "By giving every pod a public IP directly",
+                "By using an Ingress that maps a host and path to a Service, which then load balances to the pods",
+                "By editing etcd by hand for each request",
+                "External HTTP cannot reach a cluster",
+              ],
+              a: 1,
+              e: "An Ingress defines host and path rules that route external HTTP and HTTPS to a Service, and the Service load balances across the pods behind it.",
+            },
+            {
+              type: "multi",
+              q: "Which capabilities does Kubernetes provide out of the box?",
+              o: [
+                "Self healing by replacing failed pods",
+                "Horizontal scaling of replicas",
+                "Rolling updates with controlled rollout",
+                "Guaranteeing application code is bug free",
+              ],
+              a: [0, 1, 2],
+              e: "Kubernetes provides self healing, scaling, and rolling updates. It cannot make your application code correct; that is the developer's responsibility.",
             },
           ],
         },
@@ -868,177 +1425,337 @@
           title: "Serverless & FaaS",
           learn: `
 <div class="card">
-  <h2>What is FaaS? (Function-as-a-Service)</h2>
-  <p>Run code without managing servers. You write a function, upload it. It runs on demand, scales automatically, you pay only for execution.</p>
-  <div class="analogy"><strong>Server-based:</strong> <em>Rent a server 24/7, pay monthly even if no traffic.</em></div>
-  <div class="analogy"><strong>Serverless:</strong> <em>Pay per function invocation. No idle cost. Scales from 0 to thousands automatically.</em></div>
+  <h2>What Function as a Service means</h2>
+  <p>With FaaS you write a function and upload it, and the platform runs it on demand. There are still servers underneath, but you do not provision or manage them. You are billed for actual execution, scaling automatically from zero to many concurrent instances.</p>
+  <div class="analogy"><strong>Server based:</strong> <em>You rent a server that runs around the clock and pay even when it is idle.</em></div>
+  <div class="analogy"><strong>Serverless:</strong> <em>You pay per invocation with no idle cost, and the platform scales from zero to thousands as load arrives.</em></div>
 </div>
 
 <div class="card">
-  <h2>Serverless platforms</h2>
+  <h2>Platforms</h2>
   <div class="concept-row">
     <div class="concept-label">AWS Lambda</div>
-    <div class="concept-desc">Commercial. Triggered by events (S3, API Gateway, SNS). Scales automatically.</div>
+    <div class="concept-desc">A commercial FaaS triggered by events such as object uploads, API Gateway requests, or queue messages. Scales automatically.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Fission</div>
-    <div class="concept-desc">Open-source, runs on K8s. Fast (warm pools of functions pre-started for low latency).</div>
+    <div class="concept-desc">Open source FaaS that runs on Kubernetes. It keeps a warm pool of pre started environments for low latency.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">OpenWhisk</div>
-    <div class="concept-desc">Apache's open-source FaaS. Event-driven.</div>
+    <div class="concept-desc">Apache's open source, event driven FaaS platform.</div>
   </div>
 </div>
 
 <div class="card">
-  <h2>The cold-start problem</h2>
-  <p>First invocation is slow: function spins up a runtime, loads code, executes. Subsequent calls reuse the same function instance (warm start, fast).</p>
-  <p>Fission mitigates this: keeps a pool of pre-warmed function instances ready.</p>
+  <h2>The cold start problem</h2>
+  <p>The first invocation of an idle function is slow because the platform must start a runtime, load the code, and only then execute. Later calls can reuse a warm instance and run quickly. Fission reduces cold starts by keeping a pool of pre warmed environments ready to accept code.</p>
 </div>
 
 <div class="card">
-  <h2>When to use serverless</h2>
-  <div class="analogy"><strong>Good fit:</strong> <em>Bursty traffic (thumbnailing images on upload), event processing, webhooks, background tasks.</em></div>
-  <div class="analogy"><strong>Bad fit:</strong> <em>Steady high traffic (run 24/7, cheaper as a persistent service), long-running jobs, complex state.</em></div>
+  <h2>Connecting a request to a Fission function</h2>
+  <p>In Fission you expose a function over HTTP by creating a route. A route connects a URL and an HTTP method to a specific function, so a request to that URL and method invokes the function. Timers, message queues, and other triggers can also invoke functions, but for HTTP the route is the mechanism.</p>
+</div>
+
+<div class="card">
+  <h2>When serverless fits, and when it does not</h2>
+  <div class="analogy"><strong>Good fit:</strong> <em>Bursty or unpredictable traffic, event processing, webhooks, and short background tasks such as generating a thumbnail when an image is uploaded.</em></div>
+  <div class="analogy"><strong>Poor fit:</strong> <em>Steady high traffic that is cheaper on an always on service, long running jobs, and workloads needing heavy local state, since functions are short lived and stateless.</em></div>
 </div>
 `,
           quiz: [
             {
-              q: "Serverless (FaaS) scales from 0 to thousands. Traditional servers...",
+              type: "single",
+              q: "Which statement best captures the meaning of serverless (FaaS)?",
               o: [
-                "Cannot scale",
-                "Require manual scaling decisions or fixed capacity",
-                "Scale faster than serverless",
-                "Cannot be paused",
+                "There are literally no servers involved",
+                "Servers exist but you do not provision or manage them, and you pay per execution",
+                "You rent a dedicated server billed monthly",
+                "It only runs on your own laptop",
               ],
               a: 1,
+              e: "Serverless still uses servers, but the provider manages them. You deploy functions, they scale automatically, and you pay for actual execution rather than idle capacity.",
             },
             {
-              q: "A cold start in serverless means...",
+              type: "single",
+              q: "A cold start in a FaaS platform refers to:",
               o: [
-                "The function is deleted",
-                "The first invocation loads the runtime and code (slower)",
-                "The platform is offline",
-                "Subsequent calls are slower",
+                "The function being permanently deleted",
+                "The first invocation having to start a runtime and load code before executing, adding latency",
+                "The entire platform going offline",
+                "Warm invocations becoming slower over time",
               ],
               a: 1,
+              e: "A cold start is the latency of the first call to an idle function, when the runtime must be started and the code loaded. Warm instances avoid this and respond faster.",
             },
             {
-              q: "Fission uses warm pools because...",
+              type: "multi",
+              q: "Which workloads are a good fit for serverless functions?",
               o: [
-                "It saves money",
-                "Pre-warmed function instances reduce cold-start latency",
-                "It prevents all functions from running",
-                "It is simpler to code",
+                "Generating a thumbnail when an image is uploaded",
+                "Handling sporadic webhook callbacks",
+                "A constant, high volume service running every second of the day",
+                "Event processing with idle periods between bursts",
               ],
-              a: 1,
+              a: [0, 1, 3],
+              e: "Serverless suits bursty, event driven, short tasks with idle gaps. Constant high volume traffic (option 3) is usually cheaper on an always on service, so it is not a good fit.",
             },
             {
-              q: "Serverless is most cost-effective for...",
+              type: "single",
+              q: "How do you connect an HTTP request to a Fission function?",
               o: [
-                "Always-on high traffic",
-                "Bursty traffic with idle periods",
-                "Long-running batch jobs",
-                "Stateful applications",
+                "A timer trigger must be created to fire on each HTTP request",
+                "A route must be created that connects a URL and an HTTP method to the function",
+                "You must give the function its own public IP address",
+                "HTTP cannot trigger a Fission function",
               ],
               a: 1,
+              e: "In Fission a route maps a URL and HTTP method to a function, so calling that URL invokes it. Timers and queues are other trigger types, but HTTP uses a route.",
+            },
+            {
+              type: "single",
+              q: "Why does Fission maintain a pool of pre warmed environments?",
+              o: [
+                "To save storage space",
+                "To reduce cold start latency by having runtimes ready to accept function code",
+                "To prevent functions from ever running",
+                "To make the code simpler to write",
+              ],
+              a: 1,
+              e: "Pre warmed environments mean a runtime is already started, so an incoming request avoids most of the cold start cost and responds with low latency.",
+            },
+            {
+              type: "multi",
+              q: "Which statements about serverless cost and scaling are accurate?",
+              o: [
+                "You typically pay only for actual execution time and invocations",
+                "Functions can scale from zero to many concurrent instances automatically",
+                "You pay a fixed monthly fee even when there is no traffic",
+                "There is no idle cost when the function is not invoked",
+              ],
+              a: [0, 1, 3],
+              e: "Serverless bills per execution, scales automatically including to zero, and has no idle cost. A fixed monthly charge regardless of traffic describes the server based model.",
+            },
+            {
+              type: "multi",
+              q: "Which of these are recognised FaaS or serverless platforms?",
+              o: ["AWS Lambda", "Fission", "Apache OpenWhisk", "Apache Hadoop"],
+              a: [0, 1, 2],
+              e: "Lambda, Fission, and OpenWhisk are FaaS platforms. Hadoop is a big data batch processing framework, not a serverless platform.",
+            },
+            {
+              type: "single",
+              q: "A consequence of functions being short lived and stateless is that:",
+              o: [
+                "They can hold large in memory state safely between calls",
+                "Persistent state should live in an external store such as a database or object storage",
+                "They cannot respond to events",
+                "They must run for hours at a time",
+              ],
+              a: 1,
+              e: "Because instances are ephemeral, you cannot rely on local memory persisting. Durable state belongs in an external database, cache, or object store.",
+            },
+            {
+              type: "single",
+              q: "Compared with an always on service, a long running batch job on serverless is usually:",
+              o: [
+                "Cheaper and the recommended choice",
+                "A poor fit, since functions are meant for short tasks and platforms cap execution time",
+                "Impossible to express in code",
+                "Always faster",
+              ],
+              a: 1,
+              e: "FaaS targets short, event driven tasks and enforces execution time limits, so long running batch work is a poor fit and better suited to a dedicated service.",
+            },
+            {
+              type: "multi",
+              q: "Which events can be used to trigger serverless functions on common platforms?",
+              o: [
+                "An object being uploaded to storage",
+                "An HTTP request through an API gateway or route",
+                "A timer or schedule firing",
+                "A function can never be triggered automatically",
+              ],
+              a: [0, 1, 2],
+              e: "Storage events, HTTP requests, and timers are all standard triggers. Automatic, event driven invocation is the whole point of FaaS.",
             },
           ],
         },
 
         {
           id: "bigdata",
-          title: "Big Data & CAP Theorem",
+          title: "Big Data, CAP & Search",
           learn: `
 <div class="card">
-  <h2>The four Vs of Big Data</h2>
+  <h2>The four Vs of big data</h2>
   <div class="concept-row">
     <div class="concept-label">Volume</div>
-    <div class="concept-desc">Petabytes. Cannot fit on one machine. Need distributed storage (HDFS, S3, Swift).</div>
+    <div class="concept-desc">The sheer amount of data, often too large for one machine, needing distributed storage such as HDFS, S3, or Swift.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Velocity</div>
-    <div class="concept-desc">Streaming. Data arrives fast. Need real-time processing (Kafka, Flink, Spark Streaming).</div>
+    <div class="concept-desc">The speed at which data arrives, including real time streams handled by tools like Kafka, Flink, or Spark Streaming.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Variety</div>
-    <div class="concept-desc">Different formats (JSON, CSV, images, video). ETL (extract, transform, load) needed.</div>
+    <div class="concept-desc">The many formats, structured, semi structured, and unstructured, that require extract, transform, load processing.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Veracity</div>
-    <div class="concept-desc">Data quality. Errors, duplicates, missing values. Cleaning is hard.</div>
+    <div class="concept-desc">The trustworthiness and quality of data, including errors, duplicates, and missing values that must be cleaned.</div>
   </div>
 </div>
 
 <div class="card">
-  <h2>CAP Theorem: pick two</h2>
-  <p>In a network partition, you CANNOT have all three. You must sacrifice one:</p>
+  <h2>CAP Theorem: choose two under partition</h2>
+  <p>In a distributed system you cannot fully guarantee all three properties at once when the network can fail.</p>
   <div class="scenario">
     <div class="scenario-prompt">Consistency (C)</div>
-    <div class="scenario-text">All nodes see the same data at the same time.</div>
+    <div class="scenario-text">Every read sees the most recent write, so all nodes agree on the data.</div>
   </div>
   <div class="scenario">
     <div class="scenario-prompt">Availability (A)</div>
-    <div class="scenario-text">System keeps running even if some nodes fail.</div>
+    <div class="scenario-text">Every request gets a non error response, even if some nodes are down.</div>
   </div>
   <div class="scenario">
     <div class="scenario-prompt">Partition tolerance (P)</div>
-    <div class="scenario-text">System survives network splits (nodes can't reach each other).</div>
+    <div class="scenario-text">The system keeps working when the network splits and nodes cannot all reach each other.</div>
   </div>
-  <div class="analogy"><strong>Real world:</strong> <em>Network partitions WILL happen. You choose CA (fail-stop, no partition) or AP (eventual consistency, partition-tolerant) or CP (consistent, accept unavailability).</em></div>
+  <div class="analogy"><strong>Reality:</strong> <em>Network partitions will happen, so P is effectively mandatory for a distributed store. The real choice during a partition is between consistency (CP) and availability (AP).</em></div>
 </div>
 
 <div class="card">
-  <h2>Real-world examples</h2>
+  <h2>Where real systems land</h2>
   <div class="concept-row">
     <div class="concept-label">CA</div>
-    <div class="concept-desc">Traditional SQL databases (stop accepting writes during partition). Google Bigtable (careful consistency).</div>
+    <div class="concept-desc">Traditional single node relational databases. Consistent and available, but they assume no partition.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">AP</div>
-    <div class="concept-desc">DynamoDB, Cassandra, CouchDB. Available under partition, eventually consistent.</div>
+    <div class="concept-desc">DynamoDB, Cassandra, CouchDB. Stay available during a partition and become eventually consistent.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">CP</div>
-    <div class="concept-desc">Distributed locks, Zookeeper. Reject writes during partition to stay consistent.</div>
+    <div class="concept-desc">Systems like Zookeeper and distributed locks. Reject some requests during a partition to preserve consistency.</div>
   </div>
+</div>
+
+<div class="card">
+  <h2>Search engines: ElasticSearch</h2>
+  <p>ElasticSearch is a distributed search and analytics engine built on inverted indexes, not a relational database. It is excellent at full text search and aggregations over large document sets.</p>
+  <p>It is not designed for arbitrary many to many joins the way a relational database is. It can emulate some joins through lookup indexes, but with limitations, for example on the size of the lookup index. The honest answer to whether it can do many to many joins is yes through lookup indexes, but with limitations.</p>
 </div>
 `,
           quiz: [
             {
-              q: "Which of the four Vs refers to data arriving in real-time?",
-              o: ["Volume", "Velocity", "Veracity", "Variety"],
+              type: "single",
+              q: "Which of the four Vs refers to the speed at which data arrives, including real time streams?",
+              o: ["Volume", "Velocity", "Variety", "Veracity"],
               a: 1,
+              e: "Velocity is about the rate of data arrival and the need for real time or streaming processing. Volume is the amount, variety is formats, and veracity is quality.",
             },
             {
-              q: "CAP Theorem says in a network partition, you cannot have all three. Which two is most common?",
+              type: "single",
+              q: "Because network partitions are unavoidable in a distributed data store, the practical CAP trade off is between:",
               o: [
-                "CA (consistent, available)",
-                "AP (available, partition-tolerant)",
-                "CP (consistent, partition-tolerant)",
-                "All three always",
+                "Consistency and availability",
+                "Volume and velocity",
+                "Latency and throughput",
+                "Encryption and authentication",
               ],
-              a: 1,
+              a: 0,
+              e: "Partition tolerance is effectively required, so the real decision under a partition is whether to favour consistency (CP) or availability (AP).",
             },
             {
-              q: "DynamoDB and Cassandra are...",
-              o: [
-                "CA systems",
-                "AP systems (available during partition, eventually consistent)",
-                "CP systems",
-                "Not distributed",
-              ],
-              a: 1,
+              type: "multi",
+              q: "Which databases are typically classified as AP systems (available and partition tolerant, eventually consistent)?",
+              o: ["Cassandra", "DynamoDB", "CouchDB", "A single node SQL server enforcing strict consistency"],
+              a: [0, 1, 2],
+              e: "Cassandra, DynamoDB, and CouchDB stay available under partition and reconcile to eventual consistency. A single node strongly consistent SQL server is the CA style.",
             },
             {
-              q: "Data veracity refers to...",
+              type: "single",
+              q: "Data veracity refers to:",
               o: [
                 "How fast data arrives",
-                "Data quality and accuracy",
-                "How much data exists",
-                "Encryption",
+                "The quality, accuracy, and trustworthiness of the data",
+                "The total volume of data",
+                "Whether the data is encrypted",
               ],
               a: 1,
+              e: "Veracity is about data quality: errors, duplicates, bias, and missing values that undermine trust and must be cleaned before analysis.",
+            },
+            {
+              type: "single",
+              q: "Can ElasticSearch perform many to many joins of documents? Choose the best answer.",
+              o: [
+                "No, ElasticSearch cannot perform any kind of join",
+                "Yes, exactly like a relational database with no limitations",
+                "Yes, through lookup indexes, but with limitations such as on the size of the lookup index",
+                "Only if the documents are stored in a SQL database first",
+              ],
+              a: 2,
+              e: "ElasticSearch is not a relational database, but it can emulate joins via lookup indexes within limits, for example the lookup index size. That nuanced yes is the best answer.",
+            },
+            {
+              type: "multi",
+              q: "Which statements about the CAP properties are correct?",
+              o: [
+                "Consistency means every read reflects the most recent write",
+                "Availability means every request receives a non error response",
+                "Partition tolerance means the system keeps operating despite network splits",
+                "CAP guarantees you can always have all three at once",
+              ],
+              a: [0, 1, 2],
+              e: "The definitions of C, A, and P are correct. The theorem's point is precisely that you cannot guarantee all three simultaneously when a partition occurs.",
+            },
+            {
+              type: "multi",
+              q: "Which tools or stores are commonly associated with handling big data volume or velocity?",
+              o: [
+                "HDFS for distributed storage of large volumes",
+                "Kafka for high velocity streaming ingestion",
+                "Spark Streaming for real time processing",
+                "A single spreadsheet on one laptop",
+              ],
+              a: [0, 1, 2],
+              e: "HDFS handles volume, while Kafka and Spark Streaming handle velocity. A single spreadsheet cannot scale to big data volume or velocity.",
+            },
+            {
+              type: "single",
+              q: "A traditional single node relational database is best described under CAP as:",
+              o: [
+                "AP, available during partitions",
+                "CA, consistent and available but assuming no partition",
+                "CP, sacrificing availability during partitions",
+                "None of CAP applies to it",
+              ],
+              a: 1,
+              e: "A single node relational database is consistent and available but assumes the network does not partition, so it is the CA corner.",
+            },
+            {
+              type: "single",
+              q: "ElasticSearch is fundamentally built on which data structure for fast full text search?",
+              o: [
+                "A B tree primary key index",
+                "An inverted index mapping terms to the documents that contain them",
+                "A relational join table",
+                "A blockchain ledger",
+              ],
+              a: 1,
+              e: "ElasticSearch uses inverted indexes that map each term to the documents containing it, which makes full text search and aggregation fast.",
+            },
+            {
+              type: "multi",
+              q: "Which statements about big data variety are correct?",
+              o: [
+                "Data can be structured, semi structured, or unstructured",
+                "Different formats such as JSON, CSV, images, and video must often be integrated",
+                "Extract, transform, load processing is commonly used to reconcile formats",
+                "Variety means all data is in a single fixed schema",
+              ],
+              a: [0, 1, 2],
+              e: "Variety is about the mix of formats and structures, often reconciled with ETL. A single fixed schema is the opposite of variety.",
             },
           ],
         },
@@ -1051,70 +1768,156 @@
   <h2>The four As of cloud security</h2>
   <div class="concept-row">
     <div class="concept-label">Authentication</div>
-    <div class="concept-desc">Who are you? Prove your identity (password, certificate, MFA, federated SSO).</div>
+    <div class="concept-desc">Who are you? Proving identity through a password, certificate, multi factor authentication, or federated single sign on.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Authorisation</div>
-    <div class="concept-desc">What can you do? After authenticated, what resources/actions are permitted (IAM roles, policies).</div>
+    <div class="concept-desc">What may you do? After authentication, deciding which resources and actions are permitted through roles and policies.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Auditing</div>
-    <div class="concept-desc">What happened? Log all actions (who did what, when, to which resource). For compliance and forensics.</div>
+    <div class="concept-desc">What happened? Logging who did what, when, and to which resource, for compliance and forensic investigation.</div>
   </div>
   <div class="concept-row">
     <div class="concept-label">Accounting</div>
-    <div class="concept-desc">Who paid? Track resource usage for billing and cost control.</div>
+    <div class="concept-desc">Who pays? Tracking resource consumption for billing and cost control.</div>
   </div>
+  <p>Authentication establishes identity, and authorisation grants permissions. They are distinct: you can be authenticated yet not authorised for a given action.</p>
 </div>
 
 <div class="card">
-  <h2>Operational security challenges</h2>
-  <div class="analogy"><strong>Deletion:</strong> <em>In cloud, you don't own the physical disks. How do you securely delete data so it cannot be recovered? Cryptographic erasure is one answer.</em></div>
-  <div class="analogy"><strong>Multi-tenancy:</strong> <em>Your VM and another organisation's VM run on the same physical server. Hypervisor isolation MUST be perfect.</em></div>
-  <div class="analogy"><strong>SSO complexity:</strong> <em>Organisations want their staff to use one login everywhere. Federation (AAF, Shibboleth) makes this possible but adds complexity.</em></div>
-  <div class="analogy"><strong>Legal liability:</strong> <em>Data stored in the cloud may cross borders. GDPR, data sovereignty, and contractual liability become nightmares.</em></div>
+  <h2>What authentication actually proves</h2>
+  <p>Authentication is the act of proving your identity. A password, a fingerprint, or face recognition are factors used to do that, grouped as something you know, something you have, and something you are. Combining factors gives multi factor authentication, which is far stronger than any single factor.</p>
+</div>
+
+<div class="card">
+  <h2>Operational security challenges in the cloud</h2>
+  <div class="analogy"><strong>Secure deletion:</strong> <em>You do not own the physical disks, so guaranteeing data is unrecoverable is hard. Cryptographic erasure, destroying the encryption keys, is one practical answer.</em></div>
+  <div class="analogy"><strong>Multi tenancy:</strong> <em>Your virtual machine can share a physical host with another organisation's, so hypervisor isolation must hold. A hypervisor escape that lets one tenant read another's memory is a severe risk.</em></div>
+  <div class="analogy"><strong>Single sign on complexity:</strong> <em>Federation such as Shibboleth or the Australian Access Federation lets staff use one identity across services, which is convenient but adds trust and configuration complexity.</em></div>
+  <div class="analogy"><strong>Legal and jurisdictional risk:</strong> <em>Data may be stored across borders, raising data sovereignty, GDPR, and contractual liability concerns.</em></div>
 </div>
 `,
           quiz: [
             {
-              q: 'Authentication answers "who are you", authorisation answers...',
+              type: "single",
+              q: "Authentication answers who are you. Authorisation answers:",
               o: [
-                "Who am I?",
-                "What can you do?",
-                "What happened?",
-                "How much do I pay?",
+                "Who am I",
+                "What are you permitted to do",
+                "What happened and when",
+                "How much will it cost",
               ],
               a: 1,
+              e: "Authentication establishes identity; authorisation decides which actions and resources that identity is allowed to use.",
             },
             {
-              q: "Auditing in cloud systems is primarily for...",
+              type: "single",
+              q: "Which best defines authentication?",
               o: [
-                "Making systems faster",
-                "Logging all actions for compliance, forensics, and change tracking",
-                "Encrypting data",
-                "Preventing network packets",
+                "Deciding what resources a user may access",
+                "Proving your identity",
+                "Recording every action for later review",
+                "Charging users for resource usage",
               ],
               a: 1,
+              e: "Authentication is the act of proving identity. Deciding access is authorisation, recording actions is auditing, and charging usage is accounting.",
             },
             {
-              q: "In a cloud environment with multiple tenants on one physical server, the main security risk is...",
+              type: "multi",
+              q: "Which of the following are factors that can be used for authentication?",
               o: [
-                "Slow networks",
-                "Hypervisor isolation failure — one tenant escaping to access another",
-                "Hard drives wearing out",
-                "Billing errors",
+                "A password (something you know)",
+                "A fingerprint (something you are)",
+                "Face recognition (something you are)",
+                "A monthly invoice total",
+              ],
+              a: [0, 1, 2],
+              e: "Passwords, fingerprints, and face recognition are authentication factors across the know, have, and are categories. An invoice total relates to accounting, not authentication.",
+            },
+            {
+              type: "single",
+              q: "Auditing in a cloud system primarily exists to:",
+              o: [
+                "Make systems run faster",
+                "Log actions (who did what, when, to which resource) for compliance and forensics",
+                "Encrypt data at rest",
+                "Block all network packets",
               ],
               a: 1,
+              e: "Auditing produces a trustworthy record of activity used for compliance, investigation, and change tracking, not for performance.",
             },
             {
-              q: "Data sovereignty and GDPR concerns arise because...",
+              type: "single",
+              q: "With multiple tenants sharing one physical server, the most serious security concern is:",
+              o: [
+                "Slow network throughput",
+                "A hypervisor isolation failure letting one tenant access another tenant's data",
+                "Disk drives wearing out faster",
+                "Inaccurate billing reports",
+              ],
+              a: 1,
+              e: "Multi tenancy depends on the hypervisor isolating tenants. A hypervisor escape that breaches that boundary would expose one tenant's data to another, which is the gravest risk.",
+            },
+            {
+              type: "multi",
+              q: "Which are genuine operational security challenges introduced by cloud computing?",
+              o: [
+                "Securely deleting data you do not physically control",
+                "Maintaining isolation between tenants on shared hardware",
+                "Data sovereignty when data crosses national borders",
+                "Eliminating the need for any authentication",
+              ],
+              a: [0, 1, 2],
+              e: "Secure deletion, multi tenant isolation, and cross border data sovereignty are real cloud challenges. Cloud does not remove the need for authentication; it makes identity more important.",
+            },
+            {
+              type: "single",
+              q: "Cryptographic erasure secures deleted cloud data by:",
+              o: [
+                "Physically shredding every disk on each delete",
+                "Destroying the encryption keys so the ciphertext can no longer be decrypted",
+                "Overwriting the data with the same value once",
+                "Moving the data to a different region",
+              ],
+              a: 1,
+              e: "When you cannot guarantee physical destruction, destroying the keys renders the encrypted data unreadable, achieving practical secure deletion.",
+            },
+            {
+              type: "multi",
+              q: "Which statements about authentication and authorisation are correct?",
+              o: [
+                "A user can be authenticated but still not authorised for a specific action",
+                "Multi factor authentication combines more than one factor for stronger identity proof",
+                "Authorisation is typically expressed through roles and policies",
+                "Authorisation happens before authentication",
+              ],
+              a: [0, 1, 2],
+              e: "Identity and permission are distinct, MFA combines factors, and authorisation uses roles and policies. Logically authentication comes first, then authorisation.",
+            },
+            {
+              type: "single",
+              q: "Federated single sign on, such as Shibboleth or the Australian Access Federation, mainly provides:",
+              o: [
+                "Faster network packet routing",
+                "One identity usable across many services, at the cost of added trust and configuration complexity",
+                "Automatic encryption of all stored data",
+                "A replacement for authorisation",
+              ],
+              a: 1,
+              e: "Federation lets users authenticate once and access many services, improving convenience while adding the complexity of trust relationships between identity providers and services.",
+            },
+            {
+              type: "single",
+              q: "Storing data in the cloud across multiple countries chiefly raises which concern?",
               o: [
                 "Cloud is always cheaper",
-                "Data may be stored in different countries with different laws",
-                "Clouds cannot be encrypted",
-                "They do not actually exist",
+                "Data sovereignty and legal frameworks like GDPR, since different jurisdictions impose different rules",
+                "Clouds cannot encrypt data",
+                "There is no real concern",
               ],
               a: 1,
+              e: "When data crosses borders it can fall under multiple legal regimes, raising data sovereignty, privacy law (such as GDPR), and contractual liability issues.",
             },
           ],
         },
@@ -1122,9 +1925,7 @@
 
       let currentTopic = 0,
         currentQ = 0,
-        answers = new Array(100).fill(null),
-        correct = 0,
-        skipped = 0;
+        results = [];
 
       function renderTabs() {
         const tabs = document.getElementById("tabsContainer");
@@ -1141,6 +1942,7 @@
       function switchTopic(i) {
         currentTopic = i;
         currentQ = 0;
+        results = [];
         renderTabs();
         renderContent();
       }
@@ -1150,18 +1952,30 @@
         const content = document.getElementById("contentContainer");
         content.innerHTML = "";
 
-        // Learn tab
         const learnDiv = document.createElement("div");
         learnDiv.innerHTML = t.learn;
         content.appendChild(learnDiv);
 
-        // Quiz button
         const quizBtn = document.createElement("button");
         quizBtn.className = "btn btn-primary";
         quizBtn.style.marginTop = "30px";
         quizBtn.textContent = "Take Quiz: " + t.title;
-        quizBtn.onclick = () => showQuiz();
+        quizBtn.onclick = () => startQuiz();
         content.appendChild(quizBtn);
+      }
+
+      function startQuiz() {
+        currentQ = 0;
+        results = [];
+        showQuiz();
+      }
+
+      function isMulti(q) {
+        return q.type === "multi" || Array.isArray(q.a);
+      }
+
+      function correctSet(q) {
+        return Array.isArray(q.a) ? q.a.slice() : [q.a];
       }
 
       function showQuiz() {
@@ -1173,8 +1987,17 @@
         if (qIndex >= t.quiz.length) return showResults();
 
         const q = t.quiz[qIndex];
+        const multi = isMulti(q);
+
         const card = document.createElement("div");
         card.className = "card";
+
+        const badge = document.createElement("span");
+        badge.className = "qtype " + (multi ? "multi" : "single");
+        badge.textContent = multi
+          ? "Multiple choice (multiple answers possible)"
+          : "Multiple choice (single answer)";
+        card.appendChild(badge);
 
         const title = document.createElement("h2");
         title.textContent = "Question " + (qIndex + 1) + " of " + t.quiz.length;
@@ -1184,6 +2007,7 @@
         qText.textContent = q.q;
         qText.style.fontSize = "16px";
         qText.style.marginBottom = "20px";
+        qText.style.color = "var(--text)";
         card.appendChild(qText);
 
         const progress = document.createElement("div");
@@ -1194,20 +2018,42 @@
         progress.appendChild(pBar);
         card.appendChild(progress);
 
+        // Cover toggle: answers start hidden so you recall first, then reveal.
+        const coverLabel = document.createElement("label");
+        coverLabel.className = "cover-toggle";
+        const coverInput = document.createElement("input");
+        coverInput.type = "checkbox";
+        coverInput.checked = true;
+        coverLabel.appendChild(coverInput);
+        coverLabel.appendChild(
+          document.createTextNode("Answers hidden. Uncheck to reveal and answer")
+        );
+        card.appendChild(coverLabel);
+
+        const shell = document.createElement("div");
+        shell.className = "opt-shell covered";
+
         const optDiv = document.createElement("div");
-        optDiv.className = "option-group";
+        optDiv.className = "option-group opt-list";
         q.o.forEach((opt, i) => {
           const label = document.createElement("label");
           const input = document.createElement("input");
-          input.type = "radio";
+          input.type = multi ? "checkbox" : "radio";
           input.name = "ans";
           input.value = i;
-          input.checked = answers[qIndex] === i;
+          // Always start cleared: no selection carries over to a new screen.
+          input.checked = false;
           label.appendChild(input);
           label.appendChild(document.createTextNode(opt));
           optDiv.appendChild(label);
         });
-        card.appendChild(optDiv);
+        shell.appendChild(optDiv);
+
+        const veil = document.createElement("div");
+        veil.className = "cover-veil";
+        veil.textContent = "Recall the answer first, then uncheck the box above to reveal the options.";
+        shell.appendChild(veil);
+        card.appendChild(shell);
 
         const btnDiv = document.createElement("div");
         btnDiv.className = "button-row";
@@ -1215,14 +2061,31 @@
         const submitBtn = document.createElement("button");
         submitBtn.className = "btn btn-primary";
         submitBtn.textContent = "Submit";
+        submitBtn.disabled = true;
         submitBtn.onclick = () => submitQ(q);
         btnDiv.appendChild(submitBtn);
+
+        // Checked = covered (cannot answer). Unchecking reveals and enables submit.
+        coverInput.onchange = () => {
+          const covered = coverInput.checked;
+          shell.classList.toggle("covered", covered);
+          submitBtn.disabled = covered;
+          coverLabel.lastChild.textContent = covered
+            ? "Answers hidden. Uncheck to reveal and answer"
+            : "Answers revealed. Re-check to hide them again";
+          if (covered) {
+            // Clear any selection when the answers are covered again.
+            optDiv
+              .querySelectorAll('input[name="ans"]')
+              .forEach((inp) => (inp.checked = false));
+          }
+        };
 
         const skipBtn = document.createElement("button");
         skipBtn.className = "btn btn-secondary";
         skipBtn.textContent = "Skip";
         skipBtn.onclick = () => {
-          answers[qIndex] = -1;
+          results[qIndex] = "skipped";
           currentQ++;
           showQuiz();
         };
@@ -1233,35 +2096,53 @@
       }
 
       function submitQ(q) {
-        const checked = document.querySelector('input[name="ans"]:checked');
-        if (!checked) {
-          alert("Pick an answer");
+        const checkedInputs = [
+          ...document.querySelectorAll('input[name="ans"]:checked'),
+        ];
+        if (checkedInputs.length === 0) {
+          alert("Pick at least one answer");
           return;
         }
 
-        const ans = parseInt(checked.value);
-        answers[currentQ] = ans;
-        if (ans === q.a) correct++;
+        const chosen = checkedInputs.map((c) => parseInt(c.value)).sort();
+        const correct = correctSet(q).sort();
+        const isRight =
+          chosen.length === correct.length &&
+          chosen.every((v, i) => v === correct[i]);
 
-        // Show feedback
+        results[currentQ] = isRight ? "correct" : "incorrect";
+
+        const coverToggle = document.querySelector(".cover-toggle input");
+        if (coverToggle) coverToggle.disabled = true;
+
         const labels = [...document.querySelectorAll(".option-group label")];
-        labels.forEach((l) => (l.disabled = true));
-        labels[ans].classList.add(ans === q.a ? "correct" : "incorrect");
-        if (ans !== q.a) labels[q.a].classList.add("correct");
+        labels.forEach((l) => l.classList.add("locked"));
+        chosen.forEach((i) => {
+          labels[i].classList.add(correct.includes(i) ? "correct" : "incorrect");
+        });
+        // Reveal any correct answers the user missed.
+        correct.forEach((i) => labels[i].classList.add("correct"));
 
+        const correctText = correct.map((i) => q.o[i]).join("; ");
         const feedback = document.createElement("div");
-        feedback.className =
-          "feedback show " + (ans === q.a ? "correct" : "incorrect");
+        feedback.className = "feedback show " + (isRight ? "correct" : "incorrect");
         feedback.innerHTML =
-          (ans === q.a ? "✓ Correct" : "✗ Incorrect") +
-          ". The correct answer is: <strong>" +
-          q.o[q.a] +
-          "</strong>";
+          (isRight ? "Correct." : "Incorrect.") +
+          " Correct answer" +
+          (correct.length > 1 ? "s" : "") +
+          ": <strong>" +
+          correctText +
+          "</strong>" +
+          (q.e ? '<span class="explain">' + q.e + "</span>" : "");
         document.querySelector(".button-row").replaceWith(feedback);
 
         const nextBtn = document.createElement("button");
         nextBtn.className = "btn btn-primary";
-        nextBtn.textContent = "Next";
+        nextBtn.style.marginTop = "16px";
+        nextBtn.textContent =
+          currentQ + 1 >= TOPICS[currentTopic].quiz.length
+            ? "See Results"
+            : "Next";
         nextBtn.onclick = () => {
           currentQ++;
           showQuiz();
@@ -1271,14 +2152,57 @@
 
       function showResults() {
         const t = TOPICS[currentTopic];
-        const attempted = t.quiz.length - skipped;
+        const total = t.quiz.length;
+        const correct = results.filter((r) => r === "correct").length;
+        const incorrect = results.filter((r) => r === "incorrect").length;
+        const skipped = results.filter((r) => r === "skipped").length;
+        const attempted = correct + incorrect;
         const pct = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
 
         const content = document.getElementById("contentContainer");
-        content.innerHTML =
-          '<div class="results"><div class="results-score">' +
+        content.innerHTML = "";
+
+        const card = document.createElement("div");
+        card.className = "card results";
+        card.innerHTML =
+          '<div class="results-score">' +
           pct +
-          '%</div><div class="results-text">Quiz complete</div></div>';
+          "%</div>" +
+          '<div class="results-text">You answered ' +
+          correct +
+          " of " +
+          attempted +
+          " attempted questions correctly (" +
+          total +
+          " total).</div>" +
+          '<div class="stat-box"><div class="stat-icon correct">' +
+          correct +
+          '</div><div><div class="stat-label">Correct</div></div></div>' +
+          '<div class="stat-box"><div class="stat-icon incorrect">' +
+          incorrect +
+          '</div><div><div class="stat-label">Incorrect</div></div></div>' +
+          '<div class="stat-box"><div class="stat-icon skipped">' +
+          skipped +
+          '</div><div><div class="stat-label">Skipped</div></div></div>';
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "button-row";
+        btnRow.style.justifyContent = "center";
+
+        const retryBtn = document.createElement("button");
+        retryBtn.className = "btn btn-primary";
+        retryBtn.textContent = "Retake Quiz";
+        retryBtn.onclick = () => startQuiz();
+        btnRow.appendChild(retryBtn);
+
+        const reviewBtn = document.createElement("button");
+        reviewBtn.className = "btn btn-secondary";
+        reviewBtn.textContent = "Back to Notes";
+        reviewBtn.onclick = () => renderContent();
+        btnRow.appendChild(reviewBtn);
+
+        card.appendChild(btnRow);
+        content.appendChild(card);
       }
 
       renderTabs();
