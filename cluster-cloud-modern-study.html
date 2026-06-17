@@ -1,0 +1,1288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cluster & Cloud Computing — Study Tool</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --primary-light: #dbeafe;
+        --accent: #06b6d4;
+        --accent-light: #cffafe;
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --danger: #ef4444;
+        --danger-light: #fee2e2;
+        --dark: #0f172a;
+        --light: #f8fafc;
+        --border: #e2e8f0;
+        --text: #1e293b;
+        --text-muted: #64748b;
+        --body: "Inter", system-ui, sans-serif;
+        --disp: "Space Grotesk", sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        font-family: var(--body);
+        color: var(--text);
+        background: linear-gradient(135deg, #f0f4f8 0%, #e1eef9 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .app {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--accent) 100%
+        );
+        color: #fff;
+        padding: 40px 30px;
+        border-radius: 16px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+      }
+      .header h1 {
+        font-family: var(--disp);
+        font-size: 32px;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+      .header p {
+        opacity: 0.95;
+        font-size: 15px;
+        max-width: 60ch;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .tab {
+        padding: 12px 20px;
+        border: none;
+        background: none;
+        font-family: var(--disp);
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text-muted);
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .tab:hover {
+        color: var(--text);
+      }
+      .tab.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 28px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        border: 1px solid var(--border);
+        transition: box-shadow 0.2s;
+      }
+      .card:hover {
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+      }
+      .card h2 {
+        font-family: var(--disp);
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: var(--dark);
+      }
+      .card h3 {
+        font-family: var(--disp);
+        font-size: 16px;
+        margin: 20px 0 10px;
+        color: var(--primary);
+      }
+      .card p {
+        line-height: 1.7;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+      }
+      .card ul {
+        margin: 12px 0 12px 24px;
+        line-height: 1.8;
+      }
+      .card li {
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+
+      .analogy {
+        background: linear-gradient(
+          135deg,
+          var(--success-light) 0%,
+          #ecfdf5 100%
+        );
+        border-left: 4px solid var(--success);
+        padding: 16px;
+        border-radius: 8px;
+        margin: 16px 0;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+      .analogy strong {
+        color: var(--success);
+      }
+      .analogy em {
+        font-style: italic;
+        color: #047857;
+      }
+
+      .concept-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 20px;
+        margin: 16px 0;
+        align-items: start;
+      }
+      .concept-label {
+        font-weight: 600;
+        color: var(--primary);
+        font-family: var(--disp);
+      }
+      .concept-desc {
+        color: var(--text-muted);
+        line-height: 1.7;
+      }
+
+      .fill-box {
+        display: inline-block;
+        border-bottom: 2px dashed var(--border);
+        padding: 2px 8px;
+        min-width: 150px;
+        font-weight: 500;
+        color: var(--primary);
+      }
+
+      .scenario {
+        background: var(--primary-light);
+        border-left: 4px solid var(--primary);
+        padding: 16px;
+        border-radius: 8px;
+        margin: 16px 0;
+      }
+      .scenario-prompt {
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 8px;
+      }
+      .scenario-text {
+        color: var(--text-muted);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .option-group {
+        margin: 20px 0;
+      }
+      .option-group label {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+        background: var(--light);
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+      }
+      .option-group label:hover {
+        background: #fff;
+        border-color: var(--primary);
+      }
+      .option-group input[type="radio"] {
+        margin-top: 3px;
+        cursor: pointer;
+        accent-color: var(--primary);
+        flex-shrink: 0;
+      }
+      .option-group label.correct {
+        background: var(--success-light);
+        border-color: var(--success);
+      }
+      .option-group label.incorrect {
+        background: var(--danger-light);
+        border-color: var(--danger);
+      }
+      .option-group label:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+
+      .button-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .btn {
+        padding: 11px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13.5px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: var(--disp);
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-primary:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .btn-secondary {
+        background: var(--border);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      .btn-secondary:hover {
+        background: var(--light);
+        border-color: var(--primary);
+      }
+
+      .feedback {
+        padding: 12px 14px;
+        border-radius: 8px;
+        margin-top: 12px;
+        font-size: 13.5px;
+        line-height: 1.6;
+        display: none;
+      }
+      .feedback.show {
+        display: block;
+      }
+      .feedback.correct {
+        background: var(--success-light);
+        border-left: 3px solid var(--success);
+        color: #047857;
+      }
+      .feedback.incorrect {
+        background: var(--danger-light);
+        border-left: 3px solid var(--danger);
+        color: #991b1b;
+      }
+
+      .progress {
+        background: var(--border);
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 16px 0;
+      }
+      .progress-bar {
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        height: 100%;
+        transition: width 0.3s;
+      }
+
+      .results {
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .results-score {
+        font-family: var(--disp);
+        font-size: 52px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 12px;
+      }
+      .results-text {
+        color: var(--text-muted);
+        font-size: 15px;
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      .stat-box {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin: 12px 0;
+      }
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .stat-icon.correct {
+        background: var(--success-light);
+        color: var(--success);
+      }
+      .stat-icon.incorrect {
+        background: var(--danger-light);
+        color: var(--danger);
+      }
+      .stat-icon.skipped {
+        background: var(--warning-light);
+        color: var(--warning);
+      }
+      .stat-label {
+        font-weight: 600;
+        color: var(--text);
+      }
+      .stat-value {
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          padding: 24px;
+          margin-bottom: 20px;
+        }
+        .header h1 {
+          font-size: 24px;
+        }
+        .card {
+          padding: 20px;
+        }
+        .concept-row {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .tabs {
+          gap: 4px;
+          padding-bottom: 8px;
+        }
+        .tab {
+          padding: 10px 14px;
+          font-size: 12px;
+        }
+        .results-score {
+          font-size: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="header">
+        <h1>Cluster & Cloud Computing</h1>
+        <p>
+          Study scaling laws, cloud architectures, containerisation, Kubernetes,
+          serverless computing, and modern cloud practices.
+        </p>
+      </div>
+
+      <div class="tabs" id="tabsContainer"></div>
+      <div id="contentContainer"></div>
+    </div>
+
+    <script>
+      const TOPICS = [
+        {
+          id: "scaling",
+          title: "Scaling & Performance Laws",
+          learn: `
+<div class="card">
+  <h2>Two types of scaling</h2>
+  <div class="analogy"><strong>Vertical:</strong> <em>One person working faster. Buy a bigger processor, more RAM. Limits: physics (chips can only get so fast).</em></div>
+  <div class="analogy"><strong>Horizontal:</strong> <em>Hire more people. Add more machines. Scales further but HARDER to program (coordination, synchronisation).</em></div>
+</div>
+
+<div class="card">
+  <h2>Amdahl's Law: the serial fraction kills parallelism</h2>
+  <p>Speed-up = 1 / (serial% + parallel%/cores)</p>
+  <div class="scenario">
+    <div class="scenario-prompt">Example:</div>
+    <div class="scenario-text">A program is 5% serial, 95% parallel. With 100 cores: Speed-up = 1/(0.05 + 0.95/100) = 17×. No matter how many cores, max is 20× (1/0.05).</div>
+  </div>
+  <p><strong>Takeaway:</strong> Optimise the serial parts — they bottleneck everything.</p>
+</div>
+
+<div class="card">
+  <h2>Gustafson-Barsis: scale the problem, not just processors</h2>
+  <p>Don't keep problem size fixed. With more cores, solve a BIGGER problem.</p>
+  <div class="analogy"><strong>Amdahl:</strong> <em>Fixed job, many workers — diminishing returns.</em></div>
+  <div class="analogy"><strong>Gustafson:</strong> <em>More workers → bigger job → linear speed-up possible.</em></div>
+</div>
+
+<div class="card">
+  <h2>Flynn's Taxonomy: hardware parallelism types</h2>
+  <div class="concept-row">
+    <div class="concept-label">SISD</div>
+    <div class="concept-desc">Single Instruction Single Data — your laptop, one core</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">SIMD</div>
+    <div class="concept-desc">Single Instruction Multiple Data — GPU: one operation on 1000 data points in parallel</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">MIMD</div>
+    <div class="concept-desc">Multiple Instructions Multiple Data — multi-core CPU, cluster: each core does its own thing</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">MISD</div>
+    <div class="concept-desc">Rare in practice; redundant processors for fault tolerance</div>
+  </div>
+</div>
+`,
+          quiz: [
+            {
+              q: "If a program is 10% serial and 90% parallel, what is the maximum speed-up (Amdahl)?",
+              o: ["10×", "50×", "90×", "Unbounded"],
+              a: 0,
+            },
+            {
+              q: "Gustafson-Barsis solves Amdahl limitation by...",
+              o: [
+                "Using bigger processors",
+                "Scaling the problem size along with processors",
+                "Removing serial code",
+                "Ignoring latency",
+              ],
+              a: 1,
+            },
+            {
+              q: "SIMD parallelism (like a GPU) is best for...",
+              o: [
+                "Different operations on different data",
+                "Same operation on many data points",
+                "Sequential tasks",
+                "Multi-threaded servers",
+              ],
+              a: 1,
+            },
+            {
+              q: "Why is horizontal scaling (adding more machines) harder to program than vertical?",
+              o: [
+                "Bigger machines are slower",
+                "Coordination, synchronisation, and network communication become complex",
+                "Horizontal is actually easier",
+                "More machines mean fewer CPUs",
+              ],
+              a: 1,
+            },
+          ],
+        },
+
+        {
+          id: "hpc",
+          title: "HPC: SPARTAN & MPI",
+          learn: `
+<div class="card">
+  <h2>SPARTAN: supercomputer at UniMelb</h2>
+  <p>A Linux-based HPC cluster optimised for tightly coupled parallel jobs (HPC), not independent job queueing (HTC).</p>
+  <div class="concept-row">
+    <div class="concept-label">Logon node</div>
+    <div class="concept-desc">Where you SSH in. No compute runs here (shared by all users).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Worker nodes</div>
+    <div class="concept-desc">Where jobs actually run. Allocated by SLURM.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Storage</div>
+    <div class="concept-desc">Shared parallel filesystem (GPFS). All nodes see the same /home and /data.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">SLURM</div>
+    <div class="concept-desc">Job scheduler. You submit scripts with #SBATCH directives, SLURM allocates nodes.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>MPI: distributed-memory parallel programming</h2>
+  <p>Message Passing Interface. Each process has its own memory; data moves by explicit messages.</p>
+  <div class="analogy"><strong>MPI_INIT:</strong> <em>All processes join the MPI world.</em></div>
+  <div class="analogy"><strong>MPI_SEND/MPI_RECV:</strong> <em>Point-to-point messages between processes.</em></div>
+  <div class="analogy"><strong>MPI_BCAST/MPI_REDUCE:</strong> <em>Collective operations: broadcast to all, gather results.</em></div>
+  <p><strong>Key:</strong> Process 0 often orchestrates; other ranks do independent work, then sync at reduction.</p>
+</div>
+
+<div class="card">
+  <h2>SLURM essentials</h2>
+  <ul>
+    <li><span class="fill-box">sbatch job.slurm</span> — submit a batch script</li>
+    <li><span class="fill-box">squeue -u \$USER</span> — show your jobs (PD=pending, R=running, CG=completing)</li>
+    <li><span class="fill-box">sinfo</span> — show available partitions and node counts</li>
+    <li><span class="fill-box">scancel 12345</span> — kill a job</li>
+  </ul>
+</div>
+`,
+          quiz: [
+            {
+              q: "SPARTAN logon nodes are shared by all users. Should you run compute jobs there?",
+              o: [
+                "Yes, it is fastest",
+                "No — degrades service for others. Use sbatch to run on worker nodes",
+                "Only small jobs",
+                "It does not matter",
+              ],
+              a: 1,
+            },
+            {
+              q: "In an MPI program, what does MPI_Comm_rank tell each process?",
+              o: [
+                "How many processes exist",
+                "Its own ID (rank) within the communicator",
+                "The IP address of the master",
+                "Whether it is on SPARTAN",
+              ],
+              a: 1,
+            },
+            {
+              q: "What is the purpose of the SLURM #SBATCH directives?",
+              o: [
+                "Encrypt data",
+                "Request resources (nodes, time, partition) for the job",
+                "Compile the code",
+                "Start the MPI runtime",
+              ],
+              a: 1,
+            },
+            {
+              q: "SPARTAN uses a shared parallel filesystem so that...",
+              o: [
+                "Files are encrypted",
+                "All nodes access the same /home and /data; no file copying needed",
+                "Storage is faster",
+                "Jobs can run in parallel only",
+              ],
+              a: 1,
+            },
+          ],
+        },
+
+        {
+          id: "cloud",
+          title: "Cloud Models & OpenStack",
+          learn: `
+<div class="card">
+  <h2>The three cloud delivery models</h2>
+  <div class="scenario">
+    <div class="scenario-prompt">Who manages what?</div>
+    <div class="scenario-text"><span class="fill-box">IaaS (Infrastructure)</span>: You manage OS and above. Provider: virtualisation, servers, networking. <em>AWS EC2, MRC, OpenStack.</em></div>
+  </div>
+  <div class="scenario">
+    <div class="scenario-prompt"></div>
+    <div class="scenario-text"><span class="fill-box">PaaS (Platform)</span>: You manage code and data. Provider: runtime, middleware, OS, everything below. <em>Heroku, Google App Engine.</em></div>
+  </div>
+  <div class="scenario">
+    <div class="scenario-prompt"></div>
+    <div class="scenario-text"><span class="fill-box">SaaS (Software)</span>: Everything is managed. You just use it. <em>Gmail, Office 365, Canvas.</em></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>OpenStack architecture (MRC)</h2>
+  <p>Open-source IaaS platform. Melbourne Research Cloud runs on OpenStack.</p>
+  <div class="concept-row">
+    <div class="concept-label">Nova</div>
+    <div class="concept-desc">Compute: launch and manage VM instances</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Neutron</div>
+    <div class="concept-desc">Networking: virtual networks, floating IPs, security groups</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Cinder</div>
+    <div class="concept-desc">Block storage: persistent volumes for instances</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Swift</div>
+    <div class="concept-desc">Object storage: like AWS S3, buckets of objects via HTTP</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Keystone</div>
+    <div class="concept-desc">Identity: authentication and authorisation (every API call goes through it)</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Horizon</div>
+    <div class="concept-desc">Web dashboard: user interface for launching instances</div>
+  </div>
+</div>
+`,
+          quiz: [
+            {
+              q: "In IaaS, the customer manages...",
+              o: [
+                "Servers and networking only",
+                "OS and everything above",
+                "Only the application code",
+                "Everything (cloud provider has no role)",
+              ],
+              a: 1,
+            },
+            {
+              q: "OpenStack Keystone must be queried...",
+              o: [
+                "Only for login",
+                "For every API call (authentication/authorisation first)",
+                "Never — it is optional",
+                "Only for storage operations",
+              ],
+              a: 1,
+            },
+            {
+              q: "A floating IP in OpenStack is different from a fixed IP because...",
+              o: [
+                "It is always slower",
+                "It can be reassociated with a different instance instantly (no IP change)",
+                "It is private only",
+                "It only works with VMs",
+              ],
+              a: 1,
+            },
+            {
+              q: "Cinder provides ___ storage, Swift provides ___ storage.",
+              o: [
+                "Block, object",
+                "Object, block",
+                "Streaming, batch",
+                "Cache, database",
+              ],
+              a: 0,
+            },
+          ],
+        },
+
+        {
+          id: "containers",
+          title: "Containers & Docker vs VMs",
+          learn: `
+<div class="card">
+  <h2>VMs vs Containers: the tradeoff</h2>
+  <div class="analogy"><strong>VMs:</strong> <em>Full houses. Each has its own kitchen, electricity, plumbing (guest OS). Isolated but HEAVY.</em></div>
+  <div class="analogy"><strong>Containers:</strong> <em>Rooms in one house. Share the kitchen, electricity, OS kernel. LIGHT but less isolated.</em></div>
+  <p><strong>Reality:</strong> Container = image + writable layer on a shared kernel. Can boot in ~1 second. VM boots in ~30 seconds (full OS startup).</p>
+</div>
+
+<div class="card">
+  <h2>Docker essentials</h2>
+  <div class="concept-row">
+    <div class="concept-label">Image</div>
+    <div class="concept-desc">Read-only template built in layers (FROM, COPY, RUN, etc.). Lives in a registry.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Container</div>
+    <div class="concept-desc">Image + thin writable layer. Running instance of an image.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Dockerfile</div>
+    <div class="concept-desc">Recipe for building an image. Each instruction = one layer.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Registry</div>
+    <div class="concept-desc">Repository of images (Docker Hub, private registries).</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Layer caching trick</h2>
+  <p>Order matters! Put things that change least at the TOP:</p>
+  <div class="scenario">
+    <div class="scenario-prompt">Good order:</div>
+    <div class="scenario-text">FROM python | COPY requirements.txt | RUN pip install | COPY code</div>
+  </div>
+  <p><em>Why?</em> If code changes, only the last layer rebuilds. If requirements change, RUN layer rebuilds once. Docker reuses cached layers.</p>
+</div>
+
+<div class="card">
+  <h2>CI/CD in containers</h2>
+  <p>Modern pipelines: code → test → scan for vulnerabilities → build image → push to registry → deploy.</p>
+  <p>Scanning tools (Snyk, Docker Scout) check for CVEs (known security holes) in base images and dependencies.</p>
+</div>
+`,
+          quiz: [
+            {
+              q: "A container boots in ~1s, a VM in ~30s. The main reason is...",
+              o: [
+                "Containers use faster hardware",
+                "VMs must boot a full guest OS",
+                "Containers skip security",
+                "VMs are never actually slower",
+              ],
+              a: 1,
+            },
+            {
+              q: "In a Dockerfile, why should dependencies (COPY requirements.txt, RUN pip install) come before application code?",
+              o: [
+                "Alphabetical ordering",
+                "Dependencies change rarely; placing them early maximises cache reuse",
+                "Code is more important",
+                "The order does not matter",
+              ],
+              a: 1,
+            },
+            {
+              q: "A container image is...",
+              o: [
+                "A running process",
+                "A read-only template that can spawn many containers",
+                "A permanent storage location",
+                "The same as a Dockerfile",
+              ],
+              a: 1,
+            },
+            {
+              q: "Docker Scout scans for...",
+              o: [
+                "Code style issues",
+                "Known security vulnerabilities (CVEs) in images and dependencies",
+                "Slow containers",
+                "Unoptimised networks",
+              ],
+              a: 1,
+            },
+          ],
+        },
+
+        {
+          id: "k8s",
+          title: "Kubernetes: Container Orchestration",
+          learn: `
+<div class="card">
+  <h2>Why Kubernetes?</h2>
+  <p>Manually running containers is chaos. K8s provides: scheduling, self-healing, scaling, rolling updates, declarative state.</p>
+  <div class="analogy"><strong>Without K8s:</strong> <em>You manually ssh into servers and run 'docker run'. If a container crashes, you re-run it. If load spikes, you manuall add containers.</em></div>
+  <div class="analogy"><strong>With K8s:</strong> <em>You declare "I want 5 replicas of this app". K8s keeps 5 running, replaces dead ones, scales on demand.</em></div>
+</div>
+
+<div class="card">
+  <h2>K8s architecture</h2>
+  <div class="concept-row">
+    <div class="concept-label">Control Plane</div>
+    <div class="concept-desc">The brain. API server, scheduler, controller-manager, etcd (database of state).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Worker Nodes</div>
+    <div class="concept-desc">The muscle. Kubelet (agent) runs pods; kube-proxy (networking).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Pod</div>
+    <div class="concept-desc">Smallest unit: one or more containers (usually one) sharing network/storage. EPHEMERAL — comes and goes.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Deployment</div>
+    <div class="concept-desc">Says "keep N replicas of this pod running". Handles rolling updates.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Service</div>
+    <div class="concept-desc">Stable virtual IP/DNS. Load-balances across pods that come and go.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Declarative vs Imperative</h2>
+  <div class="analogy"><strong>Imperative (old):</strong> <em>"Run this container on that server. Now update it. Now scale it." You give commands.</em></div>
+  <div class="analogy"><strong>Declarative (K8s):</strong> <em>"Here is a YAML describing desired state: 3 replicas, this image, this port. K8s makes reality match it."</em></div>
+  <p>K8s continuously watches reality and reconciles it with the YAML. If a pod dies, K8s sees "want 3, have 2" and launches a new one.</p>
+</div>
+`,
+          quiz: [
+            {
+              q: "A Kubernetes Pod is...",
+              o: [
+                "A storage unit",
+                "The smallest deployable unit, usually containing one container",
+                "Permanent storage for data",
+                "An API endpoint",
+              ],
+              a: 1,
+            },
+            {
+              q: "A Deployment ensures...",
+              o: [
+                "Pods never fail",
+                "The desired number of replicas are always running",
+                "Containers are optimised",
+                "All nodes are the same",
+              ],
+              a: 1,
+            },
+            {
+              q: "A Service in K8s provides...",
+              o: [
+                "Storage",
+                "A stable IP/DNS that load-balances across ephemeral pods",
+                "Networking protocols only",
+                "Virtual machines",
+              ],
+              a: 1,
+            },
+            {
+              q: "Declarative K8s management means...",
+              o: [
+                "You manually run commands for every change",
+                "You describe desired state in YAML; K8s continuously reconciles reality",
+                "You use imperative APIs only",
+                "Commands are forbidden",
+              ],
+              a: 1,
+            },
+          ],
+        },
+
+        {
+          id: "serverless",
+          title: "Serverless & FaaS",
+          learn: `
+<div class="card">
+  <h2>What is FaaS? (Function-as-a-Service)</h2>
+  <p>Run code without managing servers. You write a function, upload it. It runs on demand, scales automatically, you pay only for execution.</p>
+  <div class="analogy"><strong>Server-based:</strong> <em>Rent a server 24/7, pay monthly even if no traffic.</em></div>
+  <div class="analogy"><strong>Serverless:</strong> <em>Pay per function invocation. No idle cost. Scales from 0 to thousands automatically.</em></div>
+</div>
+
+<div class="card">
+  <h2>Serverless platforms</h2>
+  <div class="concept-row">
+    <div class="concept-label">AWS Lambda</div>
+    <div class="concept-desc">Commercial. Triggered by events (S3, API Gateway, SNS). Scales automatically.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Fission</div>
+    <div class="concept-desc">Open-source, runs on K8s. Fast (warm pools of functions pre-started for low latency).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">OpenWhisk</div>
+    <div class="concept-desc">Apache's open-source FaaS. Event-driven.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>The cold-start problem</h2>
+  <p>First invocation is slow: function spins up a runtime, loads code, executes. Subsequent calls reuse the same function instance (warm start, fast).</p>
+  <p>Fission mitigates this: keeps a pool of pre-warmed function instances ready.</p>
+</div>
+
+<div class="card">
+  <h2>When to use serverless</h2>
+  <div class="analogy"><strong>Good fit:</strong> <em>Bursty traffic (thumbnailing images on upload), event processing, webhooks, background tasks.</em></div>
+  <div class="analogy"><strong>Bad fit:</strong> <em>Steady high traffic (run 24/7, cheaper as a persistent service), long-running jobs, complex state.</em></div>
+</div>
+`,
+          quiz: [
+            {
+              q: "Serverless (FaaS) scales from 0 to thousands. Traditional servers...",
+              o: [
+                "Cannot scale",
+                "Require manual scaling decisions or fixed capacity",
+                "Scale faster than serverless",
+                "Cannot be paused",
+              ],
+              a: 1,
+            },
+            {
+              q: "A cold start in serverless means...",
+              o: [
+                "The function is deleted",
+                "The first invocation loads the runtime and code (slower)",
+                "The platform is offline",
+                "Subsequent calls are slower",
+              ],
+              a: 1,
+            },
+            {
+              q: "Fission uses warm pools because...",
+              o: [
+                "It saves money",
+                "Pre-warmed function instances reduce cold-start latency",
+                "It prevents all functions from running",
+                "It is simpler to code",
+              ],
+              a: 1,
+            },
+            {
+              q: "Serverless is most cost-effective for...",
+              o: [
+                "Always-on high traffic",
+                "Bursty traffic with idle periods",
+                "Long-running batch jobs",
+                "Stateful applications",
+              ],
+              a: 1,
+            },
+          ],
+        },
+
+        {
+          id: "bigdata",
+          title: "Big Data & CAP Theorem",
+          learn: `
+<div class="card">
+  <h2>The four Vs of Big Data</h2>
+  <div class="concept-row">
+    <div class="concept-label">Volume</div>
+    <div class="concept-desc">Petabytes. Cannot fit on one machine. Need distributed storage (HDFS, S3, Swift).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Velocity</div>
+    <div class="concept-desc">Streaming. Data arrives fast. Need real-time processing (Kafka, Flink, Spark Streaming).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Variety</div>
+    <div class="concept-desc">Different formats (JSON, CSV, images, video). ETL (extract, transform, load) needed.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Veracity</div>
+    <div class="concept-desc">Data quality. Errors, duplicates, missing values. Cleaning is hard.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>CAP Theorem: pick two</h2>
+  <p>In a network partition, you CANNOT have all three. You must sacrifice one:</p>
+  <div class="scenario">
+    <div class="scenario-prompt">Consistency (C)</div>
+    <div class="scenario-text">All nodes see the same data at the same time.</div>
+  </div>
+  <div class="scenario">
+    <div class="scenario-prompt">Availability (A)</div>
+    <div class="scenario-text">System keeps running even if some nodes fail.</div>
+  </div>
+  <div class="scenario">
+    <div class="scenario-prompt">Partition tolerance (P)</div>
+    <div class="scenario-text">System survives network splits (nodes can't reach each other).</div>
+  </div>
+  <div class="analogy"><strong>Real world:</strong> <em>Network partitions WILL happen. You choose CA (fail-stop, no partition) or AP (eventual consistency, partition-tolerant) or CP (consistent, accept unavailability).</em></div>
+</div>
+
+<div class="card">
+  <h2>Real-world examples</h2>
+  <div class="concept-row">
+    <div class="concept-label">CA</div>
+    <div class="concept-desc">Traditional SQL databases (stop accepting writes during partition). Google Bigtable (careful consistency).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">AP</div>
+    <div class="concept-desc">DynamoDB, Cassandra, CouchDB. Available under partition, eventually consistent.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">CP</div>
+    <div class="concept-desc">Distributed locks, Zookeeper. Reject writes during partition to stay consistent.</div>
+  </div>
+</div>
+`,
+          quiz: [
+            {
+              q: "Which of the four Vs refers to data arriving in real-time?",
+              o: ["Volume", "Velocity", "Veracity", "Variety"],
+              a: 1,
+            },
+            {
+              q: "CAP Theorem says in a network partition, you cannot have all three. Which two is most common?",
+              o: [
+                "CA (consistent, available)",
+                "AP (available, partition-tolerant)",
+                "CP (consistent, partition-tolerant)",
+                "All three always",
+              ],
+              a: 1,
+            },
+            {
+              q: "DynamoDB and Cassandra are...",
+              o: [
+                "CA systems",
+                "AP systems (available during partition, eventually consistent)",
+                "CP systems",
+                "Not distributed",
+              ],
+              a: 1,
+            },
+            {
+              q: "Data veracity refers to...",
+              o: [
+                "How fast data arrives",
+                "Data quality and accuracy",
+                "How much data exists",
+                "Encryption",
+              ],
+              a: 1,
+            },
+          ],
+        },
+
+        {
+          id: "security",
+          title: "Cloud Security: the AAAs",
+          learn: `
+<div class="card">
+  <h2>The four As of cloud security</h2>
+  <div class="concept-row">
+    <div class="concept-label">Authentication</div>
+    <div class="concept-desc">Who are you? Prove your identity (password, certificate, MFA, federated SSO).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Authorisation</div>
+    <div class="concept-desc">What can you do? After authenticated, what resources/actions are permitted (IAM roles, policies).</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Auditing</div>
+    <div class="concept-desc">What happened? Log all actions (who did what, when, to which resource). For compliance and forensics.</div>
+  </div>
+  <div class="concept-row">
+    <div class="concept-label">Accounting</div>
+    <div class="concept-desc">Who paid? Track resource usage for billing and cost control.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Operational security challenges</h2>
+  <div class="analogy"><strong>Deletion:</strong> <em>In cloud, you don't own the physical disks. How do you securely delete data so it cannot be recovered? Cryptographic erasure is one answer.</em></div>
+  <div class="analogy"><strong>Multi-tenancy:</strong> <em>Your VM and another organisation's VM run on the same physical server. Hypervisor isolation MUST be perfect.</em></div>
+  <div class="analogy"><strong>SSO complexity:</strong> <em>Organisations want their staff to use one login everywhere. Federation (AAF, Shibboleth) makes this possible but adds complexity.</em></div>
+  <div class="analogy"><strong>Legal liability:</strong> <em>Data stored in the cloud may cross borders. GDPR, data sovereignty, and contractual liability become nightmares.</em></div>
+</div>
+`,
+          quiz: [
+            {
+              q: 'Authentication answers "who are you", authorisation answers...',
+              o: [
+                "Who am I?",
+                "What can you do?",
+                "What happened?",
+                "How much do I pay?",
+              ],
+              a: 1,
+            },
+            {
+              q: "Auditing in cloud systems is primarily for...",
+              o: [
+                "Making systems faster",
+                "Logging all actions for compliance, forensics, and change tracking",
+                "Encrypting data",
+                "Preventing network packets",
+              ],
+              a: 1,
+            },
+            {
+              q: "In a cloud environment with multiple tenants on one physical server, the main security risk is...",
+              o: [
+                "Slow networks",
+                "Hypervisor isolation failure — one tenant escaping to access another",
+                "Hard drives wearing out",
+                "Billing errors",
+              ],
+              a: 1,
+            },
+            {
+              q: "Data sovereignty and GDPR concerns arise because...",
+              o: [
+                "Cloud is always cheaper",
+                "Data may be stored in different countries with different laws",
+                "Clouds cannot be encrypted",
+                "They do not actually exist",
+              ],
+              a: 1,
+            },
+          ],
+        },
+      ];
+
+      let currentTopic = 0,
+        currentQ = 0,
+        answers = new Array(100).fill(null),
+        correct = 0,
+        skipped = 0;
+
+      function renderTabs() {
+        const tabs = document.getElementById("tabsContainer");
+        tabs.innerHTML = "";
+        TOPICS.forEach((t, i) => {
+          const btn = document.createElement("button");
+          btn.className = "tab" + (i === currentTopic ? " active" : "");
+          btn.textContent = t.title;
+          btn.onclick = () => switchTopic(i);
+          tabs.appendChild(btn);
+        });
+      }
+
+      function switchTopic(i) {
+        currentTopic = i;
+        currentQ = 0;
+        renderTabs();
+        renderContent();
+      }
+
+      function renderContent() {
+        const t = TOPICS[currentTopic];
+        const content = document.getElementById("contentContainer");
+        content.innerHTML = "";
+
+        // Learn tab
+        const learnDiv = document.createElement("div");
+        learnDiv.innerHTML = t.learn;
+        content.appendChild(learnDiv);
+
+        // Quiz button
+        const quizBtn = document.createElement("button");
+        quizBtn.className = "btn btn-primary";
+        quizBtn.style.marginTop = "30px";
+        quizBtn.textContent = "Take Quiz: " + t.title;
+        quizBtn.onclick = () => showQuiz();
+        content.appendChild(quizBtn);
+      }
+
+      function showQuiz() {
+        const t = TOPICS[currentTopic];
+        const content = document.getElementById("contentContainer");
+        content.innerHTML = "";
+
+        const qIndex = currentQ;
+        if (qIndex >= t.quiz.length) return showResults();
+
+        const q = t.quiz[qIndex];
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const title = document.createElement("h2");
+        title.textContent = "Question " + (qIndex + 1) + " of " + t.quiz.length;
+        card.appendChild(title);
+
+        const qText = document.createElement("p");
+        qText.textContent = q.q;
+        qText.style.fontSize = "16px";
+        qText.style.marginBottom = "20px";
+        card.appendChild(qText);
+
+        const progress = document.createElement("div");
+        progress.className = "progress";
+        const pBar = document.createElement("div");
+        pBar.className = "progress-bar";
+        pBar.style.width = ((qIndex + 1) / t.quiz.length) * 100 + "%";
+        progress.appendChild(pBar);
+        card.appendChild(progress);
+
+        const optDiv = document.createElement("div");
+        optDiv.className = "option-group";
+        q.o.forEach((opt, i) => {
+          const label = document.createElement("label");
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = "ans";
+          input.value = i;
+          input.checked = answers[qIndex] === i;
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(opt));
+          optDiv.appendChild(label);
+        });
+        card.appendChild(optDiv);
+
+        const btnDiv = document.createElement("div");
+        btnDiv.className = "button-row";
+
+        const submitBtn = document.createElement("button");
+        submitBtn.className = "btn btn-primary";
+        submitBtn.textContent = "Submit";
+        submitBtn.onclick = () => submitQ(q);
+        btnDiv.appendChild(submitBtn);
+
+        const skipBtn = document.createElement("button");
+        skipBtn.className = "btn btn-secondary";
+        skipBtn.textContent = "Skip";
+        skipBtn.onclick = () => {
+          answers[qIndex] = -1;
+          currentQ++;
+          showQuiz();
+        };
+        btnDiv.appendChild(skipBtn);
+
+        card.appendChild(btnDiv);
+        content.appendChild(card);
+      }
+
+      function submitQ(q) {
+        const checked = document.querySelector('input[name="ans"]:checked');
+        if (!checked) {
+          alert("Pick an answer");
+          return;
+        }
+
+        const ans = parseInt(checked.value);
+        answers[currentQ] = ans;
+        if (ans === q.a) correct++;
+
+        // Show feedback
+        const labels = [...document.querySelectorAll(".option-group label")];
+        labels.forEach((l) => (l.disabled = true));
+        labels[ans].classList.add(ans === q.a ? "correct" : "incorrect");
+        if (ans !== q.a) labels[q.a].classList.add("correct");
+
+        const feedback = document.createElement("div");
+        feedback.className =
+          "feedback show " + (ans === q.a ? "correct" : "incorrect");
+        feedback.innerHTML =
+          (ans === q.a ? "✓ Correct" : "✗ Incorrect") +
+          ". The correct answer is: <strong>" +
+          q.o[q.a] +
+          "</strong>";
+        document.querySelector(".button-row").replaceWith(feedback);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "btn btn-primary";
+        nextBtn.textContent = "Next";
+        nextBtn.onclick = () => {
+          currentQ++;
+          showQuiz();
+        };
+        feedback.parentNode.appendChild(nextBtn);
+      }
+
+      function showResults() {
+        const t = TOPICS[currentTopic];
+        const attempted = t.quiz.length - skipped;
+        const pct = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+
+        const content = document.getElementById("contentContainer");
+        content.innerHTML =
+          '<div class="results"><div class="results-score">' +
+          pct +
+          '%</div><div class="results-text">Quiz complete</div></div>';
+      }
+
+      renderTabs();
+      renderContent();
+    </script>
+  </body>
+</html>
