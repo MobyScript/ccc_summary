@@ -28,6 +28,18 @@
         --text-muted: #64748b;
         --body: "Inter", system-ui, sans-serif;
         --disp: "Space Grotesk", sans-serif;
+        /* Tokens for ported table / diagram components */
+        --ink: #17263b;
+        --muted: #5a6b82;
+        --line: #d4dce5;
+        --blue: #1d5fd6;
+        --blue-soft: #e5eefc;
+        --orange: #f26b2e;
+        --orange-soft: #fdeae0;
+        --teal: #0e8c7f;
+        --teal-soft: #dcf1ee;
+        --panel: #ffffff;
+        --mono: "SFMono-Regular", Consolas, ui-monospace, monospace;
       }
       * {
         margin: 0;
@@ -216,6 +228,279 @@
         font-size: 14px;
         margin: 12px 0;
         overflow-x: auto;
+      }
+
+      /* Multi line code / terminal examples */
+      .code {
+        background: var(--dark);
+        color: #e2e8f0;
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.65;
+        padding: 14px 16px;
+        border-radius: 0 8px 8px 8px;
+        margin: 0 0 14px;
+        overflow-x: auto;
+        white-space: pre;
+        tab-size: 2;
+      }
+      .code .cmt {
+        color: #94a3b8;
+      }
+      .code .dir {
+        color: #7dd3fc;
+        font-weight: 600;
+      }
+      .code .ok {
+        color: #6ee7b7;
+      }
+      .code .bad {
+        color: #fca5a5;
+      }
+      .code-label {
+        display: inline-block;
+        font-family: var(--disp);
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 4px 10px;
+        border-radius: 6px 6px 0 0;
+        margin-top: 14px;
+      }
+      .code-label.ok {
+        background: var(--success-light);
+        color: #047857;
+      }
+      .code-label.bad {
+        background: var(--danger-light);
+        color: #991b1b;
+      }
+
+      /* ===== Ported components: tables, stacks, diagrams, def-lists ===== */
+      .k {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: var(--blue-soft);
+        color: #143e8f;
+        padding: 1.5px 6px;
+        border-radius: 5px;
+        white-space: nowrap;
+      }
+      .hl {
+        background: linear-gradient(transparent 62%, #ffd9a8 62%);
+        font-weight: 600;
+      }
+      .note {
+        border-left: 3px solid var(--orange);
+        background: var(--orange-soft);
+        padding: 10px 14px;
+        border-radius: 0 8px 8px 0;
+        font-size: 14px;
+        margin: 12px 0;
+        line-height: 1.65;
+      }
+      .note b {
+        color: #b5450f;
+      }
+      .exam {
+        border-left: 3px solid var(--teal);
+        background: var(--teal-soft);
+        padding: 10px 14px;
+        border-radius: 0 8px 8px 0;
+        font-size: 14px;
+        margin: 12px 0;
+        line-height: 1.65;
+      }
+      .exam b {
+        color: #0a6459;
+      }
+
+      /* definition rows */
+      .dl {
+        display: grid;
+        grid-template-columns: minmax(110px, 180px) 1fr;
+        border-top: 1px solid var(--line);
+        margin: 12px 0 4px;
+      }
+      .dl > div {
+        padding: 8px 10px 8px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text);
+      }
+      .dl .t {
+        font-family: var(--mono);
+        font-weight: 600;
+        font-size: 12.5px;
+        color: var(--ink);
+        padding-top: 10px;
+      }
+
+      /* terminal block (ported) */
+      .term {
+        background: var(--dark);
+        color: #d8e4f2;
+        font-family: var(--mono);
+        font-size: 12.8px;
+        line-height: 1.75;
+        border-radius: 10px;
+        padding: 14px 16px;
+        overflow-x: auto;
+        margin: 12px 0;
+        white-space: pre;
+      }
+      .term .c {
+        color: #7b8fac;
+      }
+      .term .p {
+        color: #ffb169;
+      }
+      .term .g {
+        color: #5fd6c5;
+      }
+
+      /* stacks & layer diagrams */
+      .stackrow {
+        display: grid;
+        gap: 14px;
+        margin: 14px 0;
+      }
+      .stackrow.cols4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .stackrow.cols3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .stackrow.cols2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .stack {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .stack .cap {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-align: center;
+        padding: 7px 4px;
+        background: var(--ink);
+        color: #fff;
+      }
+      .layer {
+        padding: 7px 6px;
+        text-align: center;
+        font-size: 12.5px;
+        font-weight: 500;
+        border-top: 1px solid var(--line);
+        color: var(--text);
+      }
+      .layer.you {
+        background: var(--orange-soft);
+        color: #9a3a0c;
+      }
+      .layer.prov {
+        background: var(--blue-soft);
+        color: #16407e;
+      }
+      .layer.hw {
+        background: #edf1f5;
+        color: var(--muted);
+      }
+      .legend {
+        display: flex;
+        gap: 16px;
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-top: 6px;
+        flex-wrap: wrap;
+      }
+      .legend .sw {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        vertical-align: -1px;
+        margin-right: 5px;
+        border: 1px solid var(--line);
+      }
+
+      /* flow diagram (boxes + arrows) */
+      .flowdiag {
+        display: flex;
+        align-items: stretch;
+        gap: 0;
+        flex-wrap: wrap;
+        margin: 14px 0;
+      }
+      .fnode {
+        background: #fff;
+        border: 1.5px solid var(--ink);
+        border-radius: 9px;
+        padding: 8px 11px;
+        font-size: 12.5px;
+        font-weight: 600;
+        text-align: center;
+        min-width: 86px;
+        align-self: center;
+      }
+      .fnode small {
+        display: block;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .farrow {
+        align-self: center;
+        padding: 0 7px;
+        color: var(--orange);
+        font-weight: 700;
+        font-size: 15px;
+      }
+
+      /* comparison tables */
+      .table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 12px 0;
+      }
+      table.cmp {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+        min-width: 460px;
+      }
+      table.cmp th {
+        font-family: var(--mono);
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-align: left;
+        padding: 8px 10px;
+        background: var(--ink);
+        color: #fff;
+      }
+      table.cmp th:first-child {
+        border-radius: 8px 0 0 0;
+      }
+      table.cmp th:last-child {
+        border-radius: 0 8px 0 0;
+      }
+      table.cmp td {
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+        color: var(--text);
+        line-height: 1.55;
+      }
+      table.cmp tr td:first-child {
+        font-weight: 600;
       }
 
       .qtype {
@@ -518,19 +803,28 @@
       }
 
       @media (max-width: 768px) {
+        body {
+          padding: 12px;
+        }
         .header {
-          padding: 24px;
+          padding: 22px 18px;
           margin-bottom: 20px;
         }
         .header h1 {
-          font-size: 24px;
+          font-size: 23px;
+        }
+        .header p {
+          font-size: 14px;
         }
         .card {
-          padding: 20px;
+          padding: 18px 16px;
+        }
+        .card h2 {
+          font-size: 18px;
         }
         .concept-row {
           grid-template-columns: 1fr;
-          gap: 8px;
+          gap: 4px;
         }
         .tabs {
           gap: 4px;
@@ -542,6 +836,60 @@
         }
         .results-score {
           font-size: 40px;
+        }
+        /* ported components collapse on small screens */
+        .stackrow.cols4,
+        .stackrow.cols3 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .dl {
+          grid-template-columns: 1fr;
+        }
+        .dl .t {
+          border-bottom: none;
+          padding-bottom: 0;
+          padding-top: 12px;
+        }
+        .dl > div:not(.t) {
+          padding-top: 2px;
+        }
+        .term,
+        .code {
+          font-size: 12px;
+        }
+        .option-group label {
+          font-size: 13.5px;
+        }
+        .btn {
+          font-size: 13px;
+          padding: 10px 16px;
+        }
+      }
+      @media (max-width: 480px) {
+        .stackrow.cols2,
+        .stackrow.cols3,
+        .stackrow.cols4 {
+          grid-template-columns: 1fr;
+        }
+        .header h1 {
+          font-size: 20px;
+        }
+        .farrow {
+          transform: rotate(90deg);
+          padding: 4px 0;
+        }
+        .flowdiag {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .fnode {
+          min-width: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
         }
       }
     </style>
@@ -784,7 +1132,34 @@
     <li>Request memory and, if needed, GPUs.</li>
     <li>Name output and error files, then run the actual commands.</li>
   </ul>
+  <span class="code-label ok">job.slurm — a complete batch script</span>
+  <div class="code"><span class="cmt">#!/bin/bash</span>
+<span class="dir">#SBATCH</span> --job-name=my_sim
+<span class="dir">#SBATCH</span> --partition=cloud      <span class="cmt"># named pool of nodes</span>
+<span class="dir">#SBATCH</span> --nodes=4              <span class="cmt"># 4 servers</span>
+<span class="dir">#SBATCH</span> --ntasks-per-node=2    <span class="cmt"># 2 MPI ranks per node = 8 total</span>
+<span class="dir">#SBATCH</span> --cpus-per-task=4      <span class="cmt"># threads available to each rank</span>
+<span class="dir">#SBATCH</span> --mem=16G              <span class="cmt"># memory per node</span>
+<span class="dir">#SBATCH</span> --time=01:00:00        <span class="cmt"># walltime hh:mm:ss</span>
+<span class="dir">#SBATCH</span> --output=%x_%j.out     <span class="cmt"># %x = job name, %j = job id</span>
+<span class="dir">#SBATCH</span> --error=%x_%j.err
+
+module load gcc openmpi python    <span class="cmt"># load the software modules</span>
+
+srun python myCode.py bigdata.csv <span class="cmt"># srun launches all 8 ranks</span></div>
   <p>A SLURM script does not install software through sudo and does not give you interactive root on the cluster. It requests resources and launches work.</p>
+  <p><strong>Common mistakes the exam loves:</strong></p>
+  <span class="code-label bad">broken — spot the problems</span>
+  <div class="code"><span class="bad">SBATCH</span> -p cloud                  <span class="cmt"># missing #SBATCH prefix → treated as a command</span>
+<span class="bad">SBATCH</span> --nodes=4
+<span class="bad">SBATCH</span> --ntasks-per-node=2
+myCode.py bigdata.csv             <span class="cmt"># no interpreter, no srun, and no --time set</span></div>
+  <ul>
+    <li>Directives need the <span class="fill-box">#SBATCH</span> prefix; a plain <strong>SBATCH</strong> line is run as an ordinary (failing) command, not read by the scheduler.</li>
+    <li>No <span class="fill-box">--time</span> walltime is requested.</li>
+    <li>No <span class="fill-box">module load</span> for the MPI and Python software the job needs.</li>
+    <li>The program is launched directly. It must be run as <span class="fill-box">srun python myCode.py</span> so SLURM starts the ranks across all four nodes.</li>
+  </ul>
 </div>
 
 <div class="card">
@@ -796,6 +1171,11 @@
     <li><span class="fill-box">scancel 12345</span> cancel a queued or running job by id.</li>
     <li><span class="fill-box">srun</span> launch a job step, often used to start parallel tasks within an allocation.</li>
   </ul>
+  <span class="code-label ok">typical workflow from the login node</span>
+  <div class="code"><span class="cmt">$</span> sbatch job.slurm        <span class="cmt"># Submitted batch job 4521987</span>
+<span class="cmt">$</span> squeue -u $USER          <span class="cmt"># state: PD pending, R running, CG completing</span>
+<span class="cmt">$</span> sinfo                     <span class="cmt"># partitions and free/busy nodes</span>
+<span class="cmt">$</span> scancel 4521987          <span class="cmt"># cancel that job by its id</span></div>
 </div>
 
 <div class="card">
@@ -823,6 +1203,35 @@
   </div>
   <p>Note that Init, Rank, Size, Scatter, and Reduce are MPI calls. There is no MPI function literally called Collect.</p>
 </div>
+
+<div class="card"><h2>Distributed architecture paradigms</h2>
+<div class="table-wrap"><table class="cmp"><tr><th>Paradigm</th><th>Coupling</th><th>Key idea</th><th>Example</th></tr>
+<tr><td>Grid</td><td>Loose, geographically distributed</td><td>Federates resources across organisations into "virtual organisations"; heterogeneous hardware, middleware glues it together</td><td>LHC Worldwide Computing Grid</td></tr>
+<tr><td>P2P</td><td>Decentralised</td><td>No central coordinator — every node is both client and server; resilient, hard to manage/secure</td><td>BitTorrent, blockchain networks</td></tr>
+<tr><td>HTC</td><td>Independent tasks</td><td>Maximise <b>jobs completed over long periods</b> (jobs/month). Tasks are embarrassingly parallel — no inter-task communication</td><td>HTCondor pools, parameter sweeps</td></tr>
+<tr><td>HPC</td><td>Tightly coupled</td><td>Maximise <b>FLOPS</b> on one large parallel job; needs fast, low-latency interconnect (e.g. InfiniBand) because processes communicate constantly</td><td>SPARTAN, weather simulation with MPI</td></tr></table></div>
+<div class="note"><b>HTC vs HPC</b> is a classic exam discriminator: HTC = throughput of many <i>independent</i> jobs over time; HPC = speed of one <i>communicating</i> parallel job. The interconnect matters in HPC, barely in HTC.</div>
+</div>
+
+<div class="card"><h2>Shared vs distributed memory: OpenMP vs MPI</h2>
+<div class="stackrow cols2">
+ <div class="stack"><div class="cap">OpenMP — shared memory</div><div class="layer">Thread 0 · Thread 1 · Thread 2 · Thread 3</div><div class="layer prov">One shared address space</div><div class="layer hw">Single node (multi-core CPU)</div></div>
+ <div class="stack"><div class="cap">MPI — distributed memory</div><div class="layer">Proc 0 | Mem &nbsp; Proc 1 | Mem &nbsp; Proc 2 | Mem</div><div class="layer prov">Explicit messages over the network</div><div class="layer hw">Many nodes (cluster)</div></div>
+</div>
+<p><b>OpenMP</b> annotates sequential code with compiler directives; the runtime forks a team of threads and joins them afterwards (the <b>fork–join model</b>) — single node only. <b>MPI</b> gives each process its own memory and rank, moving data by explicit messages, so it scales across thousands of nodes.</p>
+<div class="term"><span class="c">// OpenMP: parallelise a loop across threads</span>
+#pragma omp parallel for reduction(+:sum)
+for (int i = 0; i &lt; N; i++) sum += a[i];</div>
+<div class="note"><b>Hybrid jobs</b> are common: MPI <i>between</i> nodes + OpenMP threads <i>within</i> each node.</div>
+</div>
+
+<div class="card"><h2>HTCondor — cycle scavenging for HTC</h2>
+<p>A workload manager built for <span class="hl">High Throughput Computing</span>: it <b>harvests idle CPU cycles</b> from machines (e.g. lab desktops overnight) and runs huge numbers of independent jobs on them.</p>
+<ul>
+<li><b>ClassAds matchmaking:</b> machines advertise what they offer, jobs advertise what they need; a central matchmaker pairs them.</li>
+<li>Jobs can be checkpointed and <b>migrate</b> when a machine's owner returns.</li>
+<li>Contrast with SLURM: SLURM manages a dedicated cluster for (mostly) HPC; HTCondor opportunistically pools non-dedicated machines for HTC.</li>
+</ul></div>
 `,
           quiz: [
             {
@@ -954,7 +1363,15 @@
           learn: `
 <div class="card">
   <h2>The three cloud service models</h2>
-  <p>The models differ by how much the provider manages versus how much you manage.</p>
+  <p>The models differ by how much the provider manages versus how much you manage. Going IaaS &rarr; PaaS &rarr; SaaS, you trade control for convenience.</p>
+  <div class="stackrow cols4">
+    <div class="stack"><div class="cap">On-prem</div><div class="layer you">Application</div><div class="layer you">Data</div><div class="layer you">Runtime</div><div class="layer you">Middleware</div><div class="layer you">OS</div><div class="layer you">Virtualisation</div><div class="layer you">Servers</div><div class="layer you">Networking</div></div>
+    <div class="stack"><div class="cap">IaaS</div><div class="layer you">Application</div><div class="layer you">Data</div><div class="layer you">Runtime</div><div class="layer you">Middleware</div><div class="layer you">OS</div><div class="layer prov">Virtualisation</div><div class="layer prov">Servers</div><div class="layer prov">Networking</div></div>
+    <div class="stack"><div class="cap">PaaS</div><div class="layer you">Application</div><div class="layer you">Data</div><div class="layer prov">Runtime</div><div class="layer prov">Middleware</div><div class="layer prov">OS</div><div class="layer prov">Virtualisation</div><div class="layer prov">Servers</div><div class="layer prov">Networking</div></div>
+    <div class="stack"><div class="cap">SaaS</div><div class="layer prov">Application</div><div class="layer prov">Data</div><div class="layer prov">Runtime</div><div class="layer prov">Middleware</div><div class="layer prov">OS</div><div class="layer prov">Virtualisation</div><div class="layer prov">Servers</div><div class="layer prov">Networking</div></div>
+  </div>
+  <div class="legend"><span><span class="sw" style="background:var(--orange-soft)"></span>You manage</span><span><span class="sw" style="background:var(--blue-soft)"></span>Provider manages</span></div>
+  <div class="exam"><b>Exam cue:</b> classify a scenario by asking "what does the user still administer?" If they patch the OS &rarr; IaaS. If they only push code &rarr; PaaS. If they only use the app &rarr; SaaS.</div>
   <div class="scenario">
     <div class="scenario-prompt">IaaS (Infrastructure as a Service)</div>
     <div class="scenario-text">You manage the operating system and everything above it. The provider runs the virtualisation, physical servers, storage, and networking. Examples: AWS EC2, the Melbourne Research Cloud, and OpenStack.</div>
@@ -1144,6 +1561,10 @@
           learn: `
 <div class="card">
   <h2>Virtual machines versus containers</h2>
+  <div class="stackrow cols2">
+   <div class="stack"><div class="cap">Virtual machines</div><div class="layer">App + libs</div><div class="layer">Guest OS (full kernel)</div><div class="layer you">Hypervisor</div><div class="layer hw">Hardware</div></div>
+   <div class="stack"><div class="cap">Containers</div><div class="layer">App + libs</div><div class="layer">App + libs</div><div class="layer you">Container engine</div><div class="layer prov">Shared host OS kernel</div><div class="layer hw">Hardware</div></div>
+  </div>
   <div class="analogy"><strong>Virtual machines:</strong> <em>Separate houses. Each VM runs a full guest operating system on top of a hypervisor, with its own kernel, drivers, and services. Strong isolation, but heavy: large images and slow boot because a whole OS starts up.</em></div>
   <div class="analogy"><strong>Containers:</strong> <em>Rooms in one shared house. Containers share the host operating system kernel and isolate processes using namespaces and control groups. Lightweight and fast to start, but isolation is weaker than a full VM.</em></div>
   <p><strong>Reality check:</strong> a container is an image plus a thin writable layer running on a shared kernel, so it can start in roughly a second. A VM commonly takes tens of seconds because it boots an entire guest OS.</p>
@@ -1177,6 +1598,16 @@
     <div class="concept-label">Registry</div>
     <div class="concept-desc">A store of images, for example Docker Hub or a private registry.</div>
   </div>
+  <div class="term"><span class="c"># Dockerfile — each instruction creates a layer</span>
+FROM python:3.11-slim          <span class="c"># base image</span>
+WORKDIR /app                   <span class="c"># working directory inside image</span>
+COPY requirements.txt .        <span class="c"># copy from build context</span>
+RUN pip install -r requirements.txt   <span class="c"># execute at BUILD time</span>
+COPY . .
+EXPOSE 8080                    <span class="c"># document the listening port</span>
+CMD ["python","app.py"]        <span class="c"># default command at RUN time</span></div>
+  <div class="note"><b>RUN vs CMD vs ENTRYPOINT:</b> RUN executes during <i>build</i> and bakes the result into a layer. CMD is the default command at <i>container start</i> (easily overridden). ENTRYPOINT fixes the executable; CMD then supplies default arguments.</div>
+  <div class="exam"><b>Exam cue:</b> Compose = multi-container on <i>one</i> host; Swarm = Docker-native multi-host clustering; Kubernetes = full orchestration (self-healing, autoscaling, declarative state).</div>
 </div>
 
 <div class="card">
@@ -1332,6 +1763,10 @@
 
 <div class="card">
   <h2>Cluster architecture</h2>
+  <div class="stackrow cols2">
+   <div class="stack"><div class="cap">Control plane</div><div class="layer">kube-apiserver — front door, REST API</div><div class="layer">etcd — key-value store of cluster state</div><div class="layer">scheduler — picks a node for each pod</div><div class="layer">controller-manager — reconciliation loops</div></div>
+   <div class="stack"><div class="cap">Each worker node</div><div class="layer">kubelet — agent that runs/monitors pods</div><div class="layer">kube-proxy — service networking rules</div><div class="layer">container runtime — containerd / CRI-O</div><div class="layer prov">Pods — your containers</div></div>
+  </div>
   <div class="concept-row">
     <div class="concept-label">Control plane</div>
     <div class="concept-desc">The brain. The API server is the front door, the scheduler places pods, controllers drive state, and etcd is the key value store holding cluster state.</div>
@@ -1368,6 +1803,16 @@
   <div class="analogy"><strong>Declarative:</strong> <em>You describe the desired state in YAML, for example three replicas of this image on this port, and Kubernetes makes reality match it.</em></div>
   <p>Kubernetes constantly watches actual state and reconciles it toward the desired state. If a pod dies, a controller notices that it wants three but has two and creates a replacement automatically. This control loop is the heart of self healing.</p>
 </div>
+
+<div class="card"><h2>Working with kubectl and Helm</h2>
+<div class="dl">
+ <div class="t">Helm</div><div>Package manager for K8s — "charts" template whole applications into versioned, configurable releases</div>
+</div>
+<div class="term"><span class="p">$</span> kubectl apply -f deployment.yaml   <span class="c"># declare desired state</span>
+<span class="p">$</span> kubectl get pods -o wide
+<span class="p">$</span> kubectl scale deployment web --replicas=5
+<span class="p">$</span> kubectl logs pod/web-7d4f...
+<span class="p">$</span> helm install myrelease ./mychart</div></div>
 `,
           quiz: [
             {
@@ -1885,6 +2330,31 @@
   <div class="analogy"><strong>Single sign on complexity:</strong> <em>Federation such as Shibboleth or the Australian Access Federation lets staff use one identity across services, which is convenient but adds trust and configuration complexity.</em></div>
   <div class="analogy"><strong>Legal and jurisdictional risk:</strong> <em>Data may be stored across borders, raising data sovereignty, GDPR, and contractual liability concerns.</em></div>
 </div>
+
+<div class="card"><h2>Shibboleth — federated single sign-on</h2>
+<p>Shibboleth lets you log into a service using your <span class="hl">home institution's credentials</span> — the service never sees your password. Three actors:</p>
+<div class="dl">
+ <div class="t">SP</div><div><b>Service Provider</b> — the resource you want (e.g. a research portal). Trusts assertions instead of holding passwords</div>
+ <div class="t">IdP</div><div><b>Identity Provider</b> — your institution (e.g. UniMelb) which actually authenticates you</div>
+ <div class="t">WAYF</div><div><b>"Where Are You From"</b> / Discovery Service — the page where you pick your home institution so you can be redirected to the right IdP</div>
+</div>
+<p>Assertions travel as signed <b>SAML</b> statements ("this user authenticated; here are their attributes"). In Australia this federation is the <b>AAF</b>. Benefits: one password, attribute release control, no credential sprawl across services.</p></div>
+
+<div class="card"><h2>Public-key (asymmetric) cryptography</h2>
+<p>Each party has a <span class="hl">key pair</span>: a public key shared with the world, a private key never shared. Two complementary uses:</p>
+<ul>
+<li><b>Confidentiality:</b> encrypt with the recipient's <b>public</b> key &rarr; only their <b>private</b> key decrypts.</li>
+<li><b>Authenticity (signatures):</b> sign with your <b>private</b> key &rarr; anyone verifies with your <b>public</b> key.</li>
+</ul>
+<p>This solves the key-distribution problem of symmetric crypto (no shared secret needed in advance). In practice (TLS, ssh) asymmetric crypto establishes trust and exchanges a session key, then fast <b>symmetric</b> encryption carries the data. Your ssh access to SPARTAN and NeCTAR instances uses exactly this key-pair model.</p></div>
+
+<div class="card"><h2>Security in CI/CD pipelines</h2>
+<p>Modern apps are mostly <b>dependencies</b>, so pipelines scan automatically on every push ("shift left" — find issues before deployment):</p>
+<div class="dl">
+ <div class="t">Snyk</div><div>Scans dependencies, containers and IaC for known vulnerabilities; suggests fixed versions; can gate merges</div>
+ <div class="t">OWASP Dependency-Check</div><div>Open-source SCA tool: matches your libraries against the CVE/NVD database of disclosed vulnerabilities</div>
+</div>
+<p>Typical pipeline: commit &rarr; build &rarr; unit tests &rarr; <b>dependency/vulnerability scan</b> &rarr; image build &rarr; deploy. A failed scan breaks the build, exactly like a failed test.</p></div>
 `,
           quiz: [
             {
@@ -2009,6 +2479,243 @@
             },
           ],
         },
+        {
+          id: "virt",
+          title: "Virtualisation & Hypervisors",
+          learn: `
+<div class="card"><h2>Why virtualise?</h2>
+<p>A <b>hypervisor (VMM)</b> multiplexes physical hardware into isolated virtual machines. Benefits: <span class="hl">consolidation</span> (many servers on one box), <span class="hl">isolation</span>, snapshots/rollback, live migration, and it is the substrate of IaaS clouds — MRC and AWS both run your "instances" as VMs on hypervisors.</p></div>
+
+<div class="card"><h2>Type 1 vs Type 2</h2>
+<div class="stackrow cols2">
+ <div class="stack"><div class="cap">Type 1 — bare metal</div><div class="layer">Guest OS + apps</div><div class="layer">Guest OS + apps</div><div class="layer you">Hypervisor</div><div class="layer hw">Hardware</div></div>
+ <div class="stack"><div class="cap">Type 2 — hosted</div><div class="layer">Guest OS + apps</div><div class="layer you">Hypervisor (an app)</div><div class="layer prov">Host OS</div><div class="layer hw">Hardware</div></div>
+</div>
+<div class="table-wrap"><table class="cmp"><tr><th>Type</th><th>Runs on</th><th>Examples</th><th>Use</th></tr>
+<tr><td>Type 1 (bare metal)</td><td>Directly on hardware</td><td>VMware ESXi, Microsoft Hyper-V, Xen, <b>KVM</b></td><td>Data centres, clouds — best performance</td></tr>
+<tr><td>Type 2 (hosted)</td><td>On top of a host OS</td><td>VMware Workstation/Fusion, VirtualBox, <b>QEMU</b></td><td>Desktops, dev/test — convenience over speed</td></tr></table></div>
+<div class="note"><b>KVM nuance (loved by examiners):</b> KVM is a Linux kernel module that turns the running Linux kernel itself into a Type 1 hypervisor. <b>QEMU</b> alone is a Type 2 emulator (it can emulate other CPU architectures in software); paired as <b>QEMU/KVM</b>, QEMU provides device emulation while KVM provides hardware-accelerated virtualisation. OpenStack typically uses QEMU/KVM underneath.</div>
+<h3>Full vs para-virtualisation</h3>
+<ul>
+<li><b>Full virtualisation:</b> guest OS is unmodified, believes it owns real hardware (hardware-assisted via Intel VT-x / AMD-V).</li>
+<li><b>Para-virtualisation:</b> guest OS is modified to make "hypercalls" to the hypervisor (classic Xen) — historically faster, less portable.</li>
+</ul>
+<h3>Other systems</h3>
+<div class="dl">
+ <div class="t">LXC</div><div>Linux Containers — OS-level virtualisation (shares the host kernel), lighter than a VM</div>
+ <div class="t">Virtuozzo</div><div>Commercial container-based virtualisation (related to OpenVZ)</div>
+ <div class="t">IBM z/VM</div><div>Mainframe hypervisor — virtualisation since the 1970s on IBM Z</div>
+ <div class="t">Ironic</div><div>OpenStack <b>bare-metal provisioning</b> — gives users whole physical machines, no hypervisor at all (for workloads where virtualisation overhead is unacceptable)</div>
+</div></div>
+
+<div class="card"><h2>Virtual disk formats</h2>
+<div class="table-wrap"><table class="cmp"><tr><th>Format</th><th>From</th><th>Properties</th></tr>
+<tr><td>.raw</td><td>Generic</td><td>Bit-for-bit image, full size allocated up front; fastest I/O, no features</td></tr>
+<tr><td>.qcow2</td><td>QEMU</td><td><b>QEMU Copy-On-Write v2</b>: thin provisioning (grows on demand), snapshots, compression, encryption — the default on OpenStack/KVM clouds</td></tr>
+<tr><td>.vmdk</td><td>VMware</td><td>VMware's disk format (ESXi, Workstation)</td></tr>
+<tr><td>.vhd / .vhdx</td><td>Microsoft</td><td>Hyper-V / Azure disk format</td></tr></table></div>
+<div class="exam"><b>Exam cue:</b> "Which format supports copy-on-write snapshots and thin provisioning?" &rarr; qcow2. "Which gives best raw performance?" &rarr; raw.</div></div>`,
+          quiz: [
+            {q:'Which of these is a Type 2 (hosted) hypervisor?',o:['VMware ESXi','Xen','VirtualBox','Hyper-V'],a:2,e:'VirtualBox runs as an application on a host OS. ESXi, Xen and Hyper-V install on bare metal (Type 1).'},
+            {q:'What makes KVM unusual among Type 1 hypervisors?',o:['It only runs Windows guests','It is a kernel module that turns Linux itself into the hypervisor','It needs no hardware support','It cannot be used by OpenStack'],a:1,e:'KVM converts the running Linux kernel into a bare-metal hypervisor; QEMU supplies device emulation alongside it.'},
+            {q:'A cloud user needs snapshots and a disk that only consumes space as data is written. Which format?',o:['.raw','.qcow2','.iso','.tar'],a:1,e:'qcow2 = copy-on-write, thin-provisioned, snapshot-capable — the OpenStack/KVM default.'},
+            {q:'What does OpenStack Ironic provision?',o:['Containers','Serverless functions','Whole physical (bare-metal) machines','DNS zones'],a:2,e:'Ironic hands users real physical servers — no hypervisor — for workloads that cannot tolerate virtualisation overhead.'},
+            {q:'Para-virtualisation differs from full virtualisation because…',o:['The guest OS is modified to call the hypervisor directly','It needs no hypervisor','It only works on ARM','Guests share one kernel'],a:0,e:'Para-virtualised guests make explicit hypercalls (classic Xen). Full virtualisation runs unmodified guests, now efficient thanks to VT-x/AMD-V.'},
+          ],
+        },
+
+        {
+          id: "ostack",
+          title: "OpenStack Service Zoo",
+          learn: `
+<div class="card"><h2>What OpenStack is</h2>
+<p>OpenStack is an <span class="hl">open-source IaaS platform</span>: a collection of cooperating services, each with its own REST API, that together let you self-serve VMs, storage and networks on shared hardware. The Melbourne Research Cloud (MRC) and the national NeCTAR/ARDC cloud are OpenStack deployments. Every action is authenticated by <b>Keystone</b> first.</p></div>
+
+<div class="card"><h2>Compute &amp; storage services</h2>
+<div class="dl">
+ <div class="t">Nova</div><div><b>Compute</b> — provisions and manages VM instances (on KVM/QEMU hypervisors)</div>
+ <div class="t">Glance</div><div><b>Image service</b> — stores the VM images/snapshots (e.g. qcow2) instances boot from</div>
+ <div class="t">Cinder</div><div><b>Block storage</b> — persistent virtual disks/volumes you attach to instances</div>
+ <div class="t">Swift</div><div><b>Object storage</b> — buckets/objects over HTTP (the OpenStack analogue of S3)</div>
+ <div class="t">Manila</div><div><b>Shared file systems</b> — NFS-style shares mountable by many instances</div>
+</div>
+<div class="note"><b>Block vs object (exam favourite):</b> Cinder volumes attach to <i>one</i> instance like a disk and need a filesystem; Swift objects are accessed over HTTP from anywhere, scale massively, but are not mountable disks.</div></div>
+
+<div class="card"><h2>Networking &amp; orchestration</h2>
+<div class="dl">
+ <div class="t">Neutron</div><div><b>Networking</b> — virtual networks, routers, ports, security groups, floating IPs</div>
+ <div class="t">Octavia</div><div><b>Load balancing</b> as a service</div>
+ <div class="t">Designate</div><div><b>DNS</b> as a service</div>
+ <div class="t">Heat</div><div><b>Orchestration</b> — declarative templates that spin up whole stacks (and auto-scale them); OpenStack's CloudFormation</div>
+</div></div>
+
+<div class="card"><h2>Specialised services</h2>
+<div class="dl">
+ <div class="t">Keystone</div><div><b>Identity</b> — authentication, tokens, projects, roles. The front door for every other service</div>
+ <div class="t">Barbican</div><div><b>Secrets/encryption-key management</b></div>
+ <div class="t">Trove</div><div><b>Database</b> aaS — managed relational and NoSQL databases</div>
+ <div class="t">Zun</div><div><b>Containers</b> aaS — run containers without managing servers</div>
+ <div class="t">Qinling</div><div><b>Serverless functions</b> (FaaS)</div>
+ <div class="t">Ceilometer</div><div><b>Telemetry</b> — usage metering for billing and monitoring</div>
+ <div class="t">Zaqar</div><div><b>Messaging</b> service (queues)</div>
+ <div class="t">Searchlight</div><div><b>Search</b> indexing across cloud resources</div>
+ <div class="t">Sahara</div><div><b>Big data</b> — provisions Hadoop/Spark clusters</div>
+</div>
+<div class="exam"><b>Memory hook:</b> map each to its AWS twin — Nova&harr;EC2, Swift&harr;S3, Cinder&harr;EBS, Glance&harr;AMIs, Neutron&harr;VPC, Heat&harr;CloudFormation, Keystone&harr;IAM, Trove&harr;RDS, Qinling&harr;Lambda, Octavia&harr;ELB, Designate&harr;Route 53, Barbican&harr;KMS, Ceilometer&harr;CloudWatch billing.</div></div>
+
+<div class="card"><h2>Launching an instance on MRC — order of services</h2>
+<div class="flowdiag">
+ <div class="fnode">Keystone<small>authenticates, issues token</small></div><div class="farrow">&rarr;</div>
+ <div class="fnode">Nova API<small>flavor, image, network, key</small></div><div class="farrow">&rarr;</div>
+ <div class="fnode">Nova scheduler<small>picks a compute host</small></div><div class="farrow">&rarr;</div>
+ <div class="fnode">Glance<small>supplies qcow2 image</small></div><div class="farrow">&rarr;</div>
+ <div class="fnode">Neutron<small>wires network + security groups</small></div><div class="farrow">&rarr;</div>
+ <div class="fnode">Cinder<small>attaches volume (optional)</small></div><div class="farrow">&rarr;</div>
+ <div class="fnode">ACTIVE<small>ssh in via floating IP</small></div>
+</div></div>`,
+          quiz: [
+            {q:'Which OpenStack service is the analogue of AWS S3?',o:['Cinder','Swift','Manila','Glance'],a:1,e:'Swift = object storage over HTTP. Cinder = block volumes (EBS), Manila = shared file systems (EFS), Glance = images.'},
+            {q:'Every OpenStack API call must first pass through…',o:['Heat','Neutron','Keystone','Ceilometer'],a:2,e:'Keystone issues the tokens that authenticate and authorise requests to all other services.'},
+            {q:'You want a template that creates a whole stack — instances, networks, volumes — in one declarative file. Which service?',o:['Sahara','Heat','Zaqar','Trove'],a:1,e:'Heat is OpenStack orchestration (and handles auto-scaling) — the CloudFormation equivalent.'},
+            {q:'Which service meters resource usage for billing?',o:['Ceilometer','Searchlight','Barbican','Octavia'],a:0,e:'Ceilometer = telemetry/metering. Searchlight = search, Barbican = secrets, Octavia = load balancing.'},
+            {q:'A research group needs one filesystem mounted simultaneously by many instances. Best fit?',o:['Cinder','Swift','Manila','Zun'],a:2,e:'Manila provides shared (NFS-style) file systems. Cinder volumes attach to a single instance.'},
+            {q:'Qinling provides…',o:['DNS','Serverless functions','Bare-metal servers','Message queues'],a:1,e:'Qinling = Function-as-a-Service. (Zaqar = messaging, Designate = DNS, Ironic = bare metal.)'},
+          ],
+        },
+
+        {
+          id: "aws",
+          title: "AWS Service Map",
+          learn: `
+<div class="card"><h2>Compute &amp; storage</h2>
+<div class="dl">
+ <div class="t">EC2</div><div><b>Elastic Compute Cloud</b> — resizable VM instances; the core IaaS service</div>
+ <div class="t">S3</div><div><b>Simple Storage Service</b> — object storage in buckets; 11 nines durability; serves static sites</div>
+ <div class="t">EBS</div><div><b>Elastic Block Store</b> — persistent block volumes for one EC2 instance</div>
+ <div class="t">EFS</div><div><b>Elastic File System</b> — NFS file shares mountable by many instances</div>
+ <div class="t">Glacier</div><div>Archival tier of S3 — very cheap, retrieval takes minutes–hours</div>
+</div>
+<div class="note"><b>Storage triad:</b> S3 = objects via HTTP · EBS = a disk for one VM · EFS = a share for many VMs. Same distinction as Swift / Cinder / Manila.</div></div>
+
+<div class="card"><h2>Networking &amp; delivery</h2>
+<div class="dl">
+ <div class="t">VPC</div><div><b>Virtual Private Cloud</b> — your isolated network: subnets, route tables, gateways, security groups</div>
+ <div class="t">ELB</div><div><b>Elastic Load Balancing</b> — spreads traffic across targets, health-checks them</div>
+ <div class="t">Route 53</div><div>DNS service (port 53!) with health-aware routing policies</div>
+ <div class="t">CloudFront</div><div>CDN — caches content at global edge locations near users</div>
+</div></div>
+
+<div class="card"><h2>Databases &amp; caching</h2>
+<div class="dl">
+ <div class="t">RDS</div><div>Managed <b>relational</b> DBs — PostgreSQL, MySQL, MariaDB, Oracle, SQL Server</div>
+ <div class="t">DynamoDB</div><div>Serverless <b>NoSQL</b> key-value store, single-digit-ms at any scale</div>
+ <div class="t">DocumentDB</div><div>Managed <b>MongoDB-compatible</b> document database</div>
+ <div class="t">OpenSearch</div><div>Managed Elasticsearch fork — full-text search &amp; analytics (your COMP90024 stack!)</div>
+ <div class="t">ElastiCache</div><div>Managed in-memory <b>Redis/Memcached</b> caching</div>
+</div></div>
+
+<div class="card"><h2>Containers &amp; serverless</h2>
+<div class="dl">
+ <div class="t">ECS</div><div>AWS's own container orchestrator</div>
+ <div class="t">EKS</div><div>Managed <b>Kubernetes</b> control plane</div>
+ <div class="t">Fargate</div><div><b>Serverless containers</b> — run ECS/EKS tasks with no EC2 nodes to manage</div>
+ <div class="t">Lambda</div><div><b>Serverless functions</b> — event-driven code, billed per ms, no servers (FaaS)</div>
+</div></div>
+
+<div class="card"><h2>Management, security &amp; the rest</h2>
+<div class="dl">
+ <div class="t">CloudFormation</div><div><b>Infrastructure as Code</b> — declarative templates for whole environments (&harr; Heat)</div>
+ <div class="t">Systems Manager</div><div>Fleet management: Session Manager (shell w/o ssh), Patch Manager, inventory</div>
+ <div class="t">WAF</div><div>Web Application Firewall — filters SQLi/XSS-style attacks at the edge</div>
+ <div class="t">IAM</div><div>Identity &amp; Access Management — users, roles, policies (&harr; Keystone)</div>
+ <div class="t">KMS</div><div>Key Management Service — create/control encryption keys (&harr; Barbican)</div>
+</div>
+<p><b>Also know by one line:</b> Batch (run batch jobs at scale) · EMR (managed Hadoop/Spark big data &harr; Sahara) · SES (email sending) · Lex (chatbots) · Polly (text-to-speech) · Alexa (voice platform) · Elastic Beanstalk (PaaS — upload code, AWS runs it).</p></div>`,
+          quiz: [
+            {q:'Which AWS service stores objects in buckets and can host a static website?',o:['EBS','S3','EFS','Glacier'],a:1,e:'S3 = object storage over HTTP. EBS is a block disk for one instance; EFS is a shared filesystem; Glacier is archival.'},
+            {q:'You must attach a persistent disk to a single EC2 instance. Choose…',o:['S3','EBS','DynamoDB','CloudFront'],a:1,e:'EBS provides block volumes that attach to one instance — the EC2 equivalent of a hard drive.'},
+            {q:'Run containers without managing any EC2 nodes:',o:['EKS on EC2','Fargate','Lightsail','Batch'],a:1,e:'Fargate is the serverless compute engine for ECS/EKS — no node management at all.'},
+            {q:'Map OpenStack Heat to its AWS equivalent:',o:['CloudWatch','CloudFormation','CloudFront','CodeDeploy'],a:1,e:'Both are declarative Infrastructure-as-Code orchestration services.'},
+            {q:'Event-driven code that runs without provisioning servers, billed per invocation:',o:['EC2 Spot','Lambda','EMR','SES'],a:1,e:'Lambda is AWS FaaS — the same category as OpenStack Qinling or Fission on K8s.'},
+            {q:'Which service blocks SQL-injection-style attacks before they reach your app?',o:['IAM','KMS','WAF','VPC'],a:2,e:'The Web Application Firewall inspects HTTP traffic for attack patterns. IAM = identity; KMS = keys; VPC = the network itself.'},
+          ],
+        },
+
+        {
+          id: "db",
+          title: "Databases, CouchDB & CAP",
+          learn: `
+<div class="card"><h2>CouchDB</h2>
+<p>A <span class="hl">document database</span>: schema-free JSON documents, accessed entirely through an <b>HTTP/REST API</b> (GET/PUT/POST/DELETE on documents). Built for replication and <b>partition tolerance</b> — clusters keep working through network splits and sync up later (eventual consistency: an <b>AP</b> system in CAP terms).</p>
+<h3>MVCC — Multi-Version Concurrency Control</h3>
+<p>Instead of locking, CouchDB keeps <b>versions</b>. Every document carries a revision id <span class="k">_rev</span>; an update must quote the revision it is based on. Readers never block writers — a reader simply sees the latest committed version while a new one is being written.</p>
+<div class="term"><span class="p">$</span> curl -X PUT db/doc1 -d '{"name":"moby"}'
+<span class="g">{"ok":true,"rev":"1-abc"}</span>
+<span class="p">$</span> curl -X PUT db/doc1 -d '{"name":"moby","uni":"unimelb","_rev":"1-abc"}'
+<span class="g">{"ok":true,"rev":"2-def"}</span>          <span class="c"># rev matched, new version</span>
+<span class="c"># another client still holding 1-abc tries to write:</span>
+<span class="g">409 Conflict</span>                       <span class="c"># must GET latest, merge, retry</span></div>
+<div class="exam"><b>Exam phrasing:</b> "CouchDB uses MVCC to achieve partition tolerance" — replicas accept writes independently (versions), conflicts are detected via revisions and resolved later, rather than blocking on a global lock.</div>
+<h3>CAP theorem in one breath</h3>
+<p>Under a network <b>P</b>artition you must choose: stay <b>C</b>onsistent (reject some requests) or stay <b>A</b>vailable (serve possibly stale data). CouchDB chooses availability (AP); a classic single-node RDBMS prioritises consistency (CA/CP behaviour).</p></div>
+
+<div class="card"><h2>The database lineup</h2>
+<div class="table-wrap"><table class="cmp"><tr><th>System</th><th>Type</th><th>One-liner</th></tr>
+<tr><td>PostgreSQL</td><td>Relational</td><td>Feature-rich open-source RDBMS; strong SQL standards, JSONB support</td></tr>
+<tr><td>MySQL / MariaDB</td><td>Relational</td><td>The classic web RDBMS; MariaDB is its community fork</td></tr>
+<tr><td>Oracle / MS SQL Server</td><td>Relational</td><td>Commercial enterprise RDBMSs</td></tr>
+<tr><td>MongoDB</td><td>Document NoSQL</td><td>JSON-like (BSON) documents; driver API rather than pure HTTP (contrast CouchDB)</td></tr>
+<tr><td>CouchDB</td><td>Document NoSQL</td><td>HTTP/REST everything, MVCC revisions, master-less replication</td></tr></table></div></div>
+
+<div class="card"><h2>GPFS / IBM Storage Scale</h2>
+<p>A <span class="hl">parallel cluster filesystem</span>: files are striped across many storage servers and disks so that hundreds of compute nodes can read/write the <b>same filesystem concurrently</b> at high aggregate bandwidth. This is what backs SPARTAN's shared storage — the reason every worker node sees the same /home and /data.</p></div>`,
+          quiz: [
+            {q:'In CouchDB, what does the _rev field enable?',o:['Encryption at rest','Detecting conflicting concurrent updates without locking','Faster indexing','SQL joins'],a:1,e:'MVCC: each write must quote the revision it read. A stale revision gives a 409 Conflict; readers never block writers.'},
+            {q:'In CAP terms, CouchDB is best described as…',o:['CA','CP','AP','None of these'],a:2,e:'It stays Available under Partition, accepting that replicas are eventually (not immediately) consistent.'},
+            {q:'A 409 Conflict from CouchDB means…',o:['The database is full','Your _rev is stale — re-fetch, merge, retry','Authentication failed','The JSON was malformed'],a:1,e:'Another writer updated the doc since your read. That is optimistic concurrency working as designed.'},
+            {q:'GPFS / IBM Storage Scale matters on clusters because…',o:['It encrypts all email','It stripes data so many nodes access one filesystem in parallel','It replaces the scheduler','It is a NoSQL database'],a:1,e:'A parallel filesystem gives every compute node a coherent, high-bandwidth view of shared storage.'},
+            {q:'Which pair are both document databases?',o:['PostgreSQL & MySQL','MongoDB & CouchDB','Oracle & MariaDB','Redis & SQL Server'],a:1,e:'Both store JSON-style documents — but CouchDB is HTTP/REST-native with MVCC revisions, MongoDB uses drivers/BSON.'},
+          ],
+        },
+
+        {
+          id: "ws",
+          title: "Web Services & Middleware",
+          learn: `
+<div class="card"><h2>Three generations of middleware</h2>
+<div class="table-wrap"><table class="cmp"><tr><th>Tech</th><th>Style</th><th>Verdict</th></tr>
+<tr><td>CORBA</td><td>Distributed objects via an ORB; interfaces in IDL</td><td>Early (90s) middleware; powerful but infamous for <b>complexity and "bloat"</b>, poor vendor interoperability, firewall-hostile</td></tr>
+<tr><td>SOAP</td><td>Explicit <b>RPC</b>: XML envelopes, operations described in WSDL contracts</td><td>Legacy web services; rigid contracts and heavyweight XML tooling — still in enterprise/banking</td></tr>
+<tr><td>ReST</td><td><b>Navigational</b>: resources at URIs manipulated with HTTP verbs</td><td>The modern default — lightweight, cacheable, uses the web as it was designed</td></tr></table></div>
+<h3>ReST principles</h3>
+<ul>
+<li><b>Resources, not operations:</b> nouns at URIs — <span class="k">/users/42</span>, not <span class="k">getUser?id=42</span>.</li>
+<li><b>Uniform interface:</b> GET (read, safe) · POST (create) · PUT (replace/update) · DELETE (remove).</li>
+<li><b>Stateless:</b> every request carries all context — no server-side session, which is what makes ReST scale horizontally.</li>
+<li>Representations usually JSON; responses use proper HTTP status codes (200, 201, 404, 409…).</li>
+</ul>
+<div class="note"><b>Spot the difference:</b> SOAP calls a remote <i>procedure</i> described in WSDL; ReST <i>navigates</i> resource state through HTTP itself. CouchDB's API and OpenStack's APIs are both ReSTful.</div></div>
+
+<div class="card"><h2>Fission — serverless on Kubernetes (FaaS)</h2>
+<p>Fission runs <span class="hl">functions</span> on a K8s cluster: you supply only the code; Fission supplies the runtime, scaling and routing. The same model as AWS Lambda or OpenStack Qinling, but open-source and on your own cluster (exactly how your COMP90024 pipeline served its API).</p>
+<div class="dl">
+ <div class="t">Function</div><div>Your code unit, deployed without building a server</div>
+ <div class="t">Environment</div><div>Language runtime container (python, node…). Fission keeps a <b>warm pool</b> of generic environment pods, slashing cold-start time</div>
+ <div class="t">Trigger</div><div>What invokes the function: HTTP route, timer, or message queue</div>
+</div>
+<div class="term"><span class="p">$</span> fission env create --name python --image fission/python-env
+<span class="p">$</span> fission function create --name harvest --env python --code harvest.py
+<span class="p">$</span> fission route create --url /harvest --function harvest --method GET
+<span class="p">$</span> curl http://router.fission/harvest</div></div>`,
+          quiz: [
+            {q:'Which property of ReST most directly enables horizontal scaling?',o:['XML payloads','Statelessness — each request is self-contained','WSDL contracts','Binary protocols'],a:1,e:'No server-side session means any replica can serve any request — just add servers behind a load balancer.'},
+            {q:'SOAP is best described as…',o:['A navigational resource architecture','An explicit RPC framework using XML envelopes and WSDL','A database protocol','A container runtime'],a:1,e:'SOAP = remote procedure calls in XML, with operations formally described in WSDL — the legacy web-service style.'},
+            {q:'CORBA is mainly remembered for…',o:['Inventing JSON','Complexity and bloat as early distributed-object middleware','Being serverless','Replacing DNS'],a:1,e:'Powerful for its era (ORBs, IDL) but heavyweight, vendor-fragmented and firewall-unfriendly — the cautionary tale before web services.'},
+            {q:'In ReST, updating resource /users/42 with a full replacement uses…',o:['GET','PUT','TRACE','CONNECT'],a:1,e:'PUT replaces/updates the resource at the URI. GET reads, POST creates, DELETE removes.'},
+            {q:'How does Fission minimise cold-start latency?',o:['It compiles functions to assembly','It keeps a pool of pre-warmed generic environment pods and specialises one on demand','It caches DNS records','It runs functions in the browser'],a:1,e:'Warm environment pods already run the language runtime; loading your code into one takes milliseconds, not a container boot.'},
+          ],
+        },
+
         {
           id: "final",
           title: "★ Final Challenge Exam",
@@ -2571,6 +3278,7 @@
 
         const qText = document.createElement("p");
         qText.textContent = q.q;
+        qText.style.whiteSpace = "pre-line";
         qText.style.fontSize = "16px";
         qText.style.marginBottom = "20px";
         qText.style.color = "var(--text)";
