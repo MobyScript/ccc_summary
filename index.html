@@ -337,6 +337,49 @@
         display: flex;
       }
 
+      /* Longer answer exam style question */
+      .la-part {
+        margin: 20px 0;
+        padding-top: 16px;
+        border-top: 1px dashed var(--border);
+      }
+      .la-part:first-of-type {
+        border-top: none;
+        padding-top: 0;
+      }
+      .la-prompt {
+        color: var(--text);
+        line-height: 1.7;
+        margin-bottom: 12px;
+        font-size: 14.5px;
+      }
+      .la-marks {
+        color: var(--text-muted);
+        font-weight: 600;
+        font-family: var(--disp);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .la-answer {
+        background: var(--success-light);
+        border-left: 3px solid var(--success);
+        border-radius: 8px;
+        padding: 14px 16px;
+        color: #047857;
+        line-height: 1.7;
+        font-size: 13.5px;
+      }
+      .la-answer strong {
+        color: #065f46;
+      }
+      .la-answer ul {
+        margin: 8px 0 0 18px;
+        line-height: 1.7;
+      }
+      .la-answer li {
+        margin-bottom: 5px;
+      }
+
       .button-row {
         display: flex;
         gap: 10px;
@@ -1966,6 +2009,482 @@
             },
           ],
         },
+        {
+          id: "final",
+          title: "★ Final Challenge Exam",
+          learn: `
+<div class="card">
+  <h2>Final Challenge Exam</h2>
+  <p>A mixed, deliberately tricky set of <strong>35 multiple choice questions</strong> drawn from every topic in the subject: scaling laws, HPC and MPI, SLURM, cloud service models, OpenStack and Ansible, containers and Docker, Kubernetes, serverless, Spark and CouchDB, big data, CAP, and cloud security. The distractors are written to catch the common misconceptions, so read every option carefully. Any number of options may be correct.</p>
+  <p>After the 35 multiple choice questions there is one <strong>exam style longer answer question worth 15 marks</strong>, with sub parts and model answers you reveal only after attempting them, in the spirit of the real COMP90024 paper.</p>
+  <div class="analogy"><strong>How to use it:</strong> <em>Sit it like the real exam. Keep the answers covered, commit to a choice, then reveal. Treat the long answer question as a written response and reveal each model answer only after you have drafted your own.</em></div>
+</div>
+`,
+          quiz: [
+            {
+              type: "multi",
+              q: "A program spends 4% of its runtime in an unavoidably serial section. Under Amdahl's Law, what is the maximum speedup as the processor count approaches infinity?",
+              o: [
+                "About 25 times, the reciprocal of the 0.04 serial fraction",
+                "About 96 times, matching the 96% of work that runs in parallel",
+                "About 24 times, because the serial part also speeds up a little",
+                "Unbounded, since 96% of the work parallelises freely",
+              ],
+              a: [0],
+              e: "As N grows without bound the speedup approaches 1/s = 1/0.04 = 25. It is the serial fraction, not the parallel fraction, that sets the ceiling.",
+            },
+            {
+              type: "multi",
+              q: "On a fixed size problem you measure a speedup of 9 using only 8 processors. What is the most credible explanation?",
+              o: [
+                "It is impossible and must be a timing error, since speedup can never exceed N",
+                "Superlinear speedup: with the data split, each processor's working set now fits in cache, cutting memory stalls",
+                "The serial fraction became negative, which lifts the ceiling above N",
+                "Gustafson's Law guarantees speedup always exceeds the processor count",
+              ],
+              a: [1],
+              e: "Superlinear speedup is real and usually caused by cache or aggregate memory effects: a smaller per node working set means fewer cache misses. It does not violate Amdahl.",
+            },
+            {
+              type: "multi",
+              q: "Which statements about strong and weak scaling are correct?",
+              o: [
+                "Strong scaling fixes the total problem size and adds processors",
+                "Weak scaling keeps the work per processor constant as processors are added",
+                "Gustafson's Law describes the weak scaling regime",
+                "Strong scaling gets easier as the serial fraction grows larger",
+              ],
+              a: [0, 1, 2],
+              e: "Strong scaling fixes the work (the Amdahl scenario); weak scaling grows the work with processors (Gustafson). A larger serial fraction makes strong scaling harder, not easier.",
+            },
+            {
+              type: "multi",
+              q: "Sixteen processors deliver a speedup of 12. The parallel efficiency is closest to:",
+              o: [
+                "133%, dividing the 16 processors by the speedup of 12",
+                "75%, the speedup of 12 divided by the 16 processors",
+                "48%, the product of the two fractions",
+                "92%, the speedup measured against 13 cores",
+              ],
+              a: [1],
+              e: "Efficiency = speedup / N = 12 / 16 = 0.75. The 133% trap inverts the ratio; efficiency does not normally exceed 100%.",
+            },
+            {
+              type: "multi",
+              q: "A fault tolerant flight controller runs several different algorithms over the very same sensor reading and votes on the outputs. Which Flynn category is this?",
+              o: [
+                "SIMD, one operation across many data elements at once",
+                "MISD, multiple instruction streams over a single data stream",
+                "MIMD, many instruction streams over many data streams",
+                "SISD, a single sequential instruction stream",
+              ],
+              a: [1],
+              e: "Many different instruction streams processing one shared data stream for redundancy is the rare MISD category, the textbook use being fault tolerant voting systems.",
+            },
+            {
+              type: "multi",
+              q: "Grid computing aimed to support Virtual Organisations (VOs). Which statements about VOs, and why platforms like the Melbourne Research Cloud do not natively support them, are correct?",
+              o: [
+                "A VO lets users and resources from multiple independent institutions share resources under agreed policies",
+                "Supporting VOs needs federated identity and cross institutional authorisation that a single tenant IaaS model lacks",
+                "Cross organisation trust, policy, and resource sharing agreements are required, not just raw compute",
+                "A VO simply means running more than one virtual machine inside a single project",
+              ],
+              a: [0, 1, 2],
+              e: "A VO spans institutions and needs federated identity, cross organisation trust, and shared policy. Plain IaaS offers compute within one tenant and does not provide that federation. It is not just multiple VMs in one project.",
+            },
+            {
+              type: "multi",
+              q: "A SPARTAN job script reads:\nSBATCH -p cloud\nSBATCH --nodes=4\nSBATCH --ntasks-per-node=2\nmyCode.py bigdata.csv\nWhich of the following are genuine problems with it?",
+              o: [
+                "The directives need the #SBATCH prefix; plain SBATCH lines are not read as scheduler directives",
+                "No walltime (--time) is requested for the job",
+                "myCode.py is invoked directly instead of through an interpreter and an MPI launcher, e.g. srun python myCode.py",
+                "Requesting four nodes is invalid because a SLURM job may only ever use one node",
+              ],
+              a: [0, 1, 2],
+              e: "Directives require the #SBATCH prefix, a walltime should be set, and the MPI program must be launched via srun/mpirun through python (a module load is also typically needed). Multi node jobs are perfectly valid.",
+            },
+            {
+              type: "multi",
+              q: "Even after the directives are fixed, simply writing 'python myCode.py' as the last line will not spread the MPI ranks across the four allocated nodes. What is needed?",
+              o: [
+                "Launch it with srun (or mpirun), which starts the ranks on all allocated nodes",
+                "Add even more --nodes; SLURM then auto distributes any command for you",
+                "Run it on the login node so that every node can see it",
+                "Nothing; a single python process automatically becomes eight MPI ranks",
+              ],
+              a: [0],
+              e: "SLURM allocates the nodes, but it is srun or mpirun that actually launches the MPI processes (ranks) across them. A bare python invocation runs a single process on one node.",
+            },
+            {
+              type: "multi",
+              q: "Which of the following SLURM facts are correct?",
+              o: [
+                "sbatch submits a batch script to the queue",
+                "squeue shows job states such as PD (pending) and R (running)",
+                "scancel <jobid> cancels a queued or running job",
+                "A SLURM script can sudo apt-get install system packages for you on the shared cluster",
+              ],
+              a: [0, 1, 2],
+              e: "sbatch submits, squeue lists states, scancel cancels. A batch script does not grant sudo or install system wide packages on the shared cluster.",
+            },
+            {
+              type: "multi",
+              q: "You have one array on the root process and want each process to receive a different chunk of it. Which MPI call fits, and how does it differ from MPI_Bcast?",
+              o: [
+                "MPI_Scatter, which splits the array into pieces sent to each process, whereas MPI_Bcast copies the same data to everyone",
+                "MPI_Bcast, which divides the array up among the processes",
+                "MPI_Gather, which sends one chunk out to every process",
+                "MPI_Reduce, which gives each process a different slice",
+              ],
+              a: [0],
+              e: "Scatter distributes different pieces of an array to different processes; Bcast sends one identical copy to all. Gather and Reduce move data the other way (towards the root).",
+            },
+            {
+              type: "multi",
+              q: "Each process holds one partial sum and you need a single total on the root. How do MPI_Gather and MPI_Reduce differ here?",
+              o: [
+                "Gather collects the values into an array on the root; Reduce combines them into one value using an operator such as sum",
+                "They are identical; either one returns the total directly",
+                "Gather computes the sum while Reduce only copies the data",
+                "Reduce sends the array to every process while Gather sends it to none",
+              ],
+              a: [0],
+              e: "Gather assembles the separate values as an array on the root; Reduce applies an operator (sum, max, etc.) to fold them into a single result. For a global sum, Reduce is the natural fit.",
+            },
+            {
+              type: "multi",
+              q: "Which of the following appear in essentially every MPI program?",
+              o: [
+                "MPI_Init to start and MPI_Finalize to shut down the environment",
+                "A way to obtain the rank (MPI_Comm_rank) and the size (MPI_Comm_size)",
+                "Processes communicating through explicit messages rather than shared memory",
+                "A single shared address space automatically visible to all processes",
+              ],
+              a: [0, 1, 2],
+              e: "Every MPI program initialises and finalises, queries rank and size, and exchanges data by explicit messages. There is no automatic shared address space; MPI is distributed memory.",
+            },
+            {
+              type: "multi",
+              q: "Under the PaaS model, which layers remain the customer's responsibility?",
+              o: [
+                "The application code they deploy",
+                "The data the application stores and processes",
+                "Patching the underlying operating system",
+                "Maintaining the physical servers and the hypervisor",
+              ],
+              a: [0, 1],
+              e: "In PaaS the customer supplies only code and data; the provider runs the platform beneath, including the OS, middleware, servers, and hypervisor.",
+            },
+            {
+              type: "multi",
+              q: "Which OpenStack service to role pairings are correct?",
+              o: [
+                "Glance stores the VM images that instances boot from",
+                "Cinder provides persistent block volumes",
+                "Keystone issues and validates the tokens used on API calls",
+                "Swift provides block storage that attaches to an instance like a disk",
+              ],
+              a: [0, 1, 2],
+              e: "Glance is images, Cinder is block storage, Keystone is identity. Swift is object storage over HTTP, not disk like block storage; block storage is Cinder.",
+            },
+            {
+              type: "multi",
+              q: "Before the OpenStack CLI or Ansible can call the Melbourne Research Cloud APIs, you must obtain and source a file from the dashboard. What is it, and why?",
+              o: [
+                "An OpenRC file: it exports the environment variables (auth URL, project, username) the clients need to authenticate to the APIs",
+                "A Dockerfile that builds the OpenStack client image",
+                "The instance's private SSH key, which the APIs validate on each call",
+                "A Cinder snapshot from which the client is booted",
+              ],
+              a: [0],
+              e: "The OpenRC file sets the environment variables (project, username, auth URL, etc.) that the command line clients and SDKs need to authenticate against the OpenStack APIs.",
+            },
+            {
+              type: "multi",
+              q: "An Ansible os_server task is meant to create an instance, but it is written with 'state: absent'. What happens when the playbook runs?",
+              o: [
+                "Ansible ensures the instance is absent (it deletes it or simply does not create it); it should be 'state: present'",
+                "It creates the instance normally; 'absent' only affects the attached volumes",
+                "It creates the instance but leaves it powered off",
+                "It throws a syntax error and changes nothing at all",
+              ],
+              a: [0],
+              e: "Ansible is declarative: 'state: absent' tells it the instance should not exist. To create the instance the task must use 'state: present'.",
+            },
+            {
+              type: "multi",
+              q: "You try to attach one Cinder volume to three running instances at once, all in read write mode. The expected result is:",
+              o: [
+                "It is not a normal operation; a standard volume attaches read write to one instance at a time",
+                "All three mount it and write concurrently with no risk of corruption",
+                "The volume is automatically converted into Swift object storage",
+                "Keystone blocks it because the user is unauthenticated",
+              ],
+              a: [0],
+              e: "A standard block volume is read write attachable to a single instance at a time. Sharing one volume read write across several instances is not a normal operation.",
+            },
+            {
+              type: "multi",
+              q: "What is an availability zone in a cloud such as NeCTAR/MRC, and what does it imply for developers?",
+              o: [
+                "A logically isolated pool of resources; developers should spread instances across zones for resilience, and cannot assume a volume in one zone attaches to an instance in another",
+                "A faster network tier that automatically replicates all data globally",
+                "A billing category that has no effect on where resources actually live",
+                "Simply another name for a security group rule",
+              ],
+              a: [0],
+              e: "Availability zones are isolated locations/resource pools. Spreading instances across zones improves resilience, and resources such as volumes are generally zone bound, so cross zone attachment is not assumed.",
+            },
+            {
+              type: "multi",
+              q: "Which statements correctly compare containers and virtual machines?",
+              o: [
+                "A VM boots its own guest kernel, while a container reuses the host kernel",
+                "Containers generally start faster and ship smaller images",
+                "Because they share the host kernel, containers give weaker isolation than VMs",
+                "Containers provide stronger isolation than VMs thanks to namespaces",
+              ],
+              a: [0, 1, 2],
+              e: "VMs run a full guest kernel and isolate strongly; containers share the host kernel, so they are lighter and faster but isolate less strongly, not more.",
+            },
+            {
+              type: "multi",
+              q: "What is the main difference between Docker Compose and Docker Swarm?",
+              o: [
+                "Compose defines and runs a multi container app, typically on one host; Swarm orchestrates and clusters containers with replicas and scaling across multiple hosts",
+                "Compose clusters many hosts, whereas Swarm can only run a single container",
+                "They are identical tools that simply have different names",
+                "Compose is for Windows only and Swarm is for Linux only",
+              ],
+              a: [0],
+              e: "Compose describes and runs a multi container application (usually on one host); Swarm is the orchestrator that schedules and scales services with replicas across a cluster of hosts.",
+            },
+            {
+              type: "multi",
+              q: "The command 'docker service create --replicas 2 --name nginx nginx' fails on a fresh Docker install. Why?",
+              o: [
+                "docker service requires Swarm mode to be enabled first (docker swarm init); services and replicas are a Swarm feature",
+                "The image name has to come before the flags on the command line",
+                "The replica count cannot be an even number",
+                "nginx can only be run with docker run, never as a service",
+              ],
+              a: [0],
+              e: "docker service and --replicas belong to Swarm mode. Without docker swarm init the daemon is not a Swarm manager, so the command fails.",
+            },
+            {
+              type: "multi",
+              q: "A React app needs one step to build static files and another (Nginx) to serve them, but maintaining two separate Dockerfiles is awkward. Which Docker feature solves this in a single Dockerfile?",
+              o: [
+                "A multi stage build: build in one stage, then copy only the artifacts into a slim final image",
+                "A bind mount from the host into the container",
+                "Docker Swarm replicas",
+                "Choosing a much larger base image so both steps fit",
+              ],
+              a: [0],
+              e: "Multi stage builds let you compile in a heavy build stage and copy just the produced artifacts into a lightweight runtime stage, keeping the final image small without two Dockerfiles.",
+            },
+            {
+              type: "multi",
+              q: "What is the key difference between a bind mount and a named volume in Docker?",
+              o: [
+                "A bind mount maps a specific host path into the container, while a named volume is managed by Docker in its own storage area",
+                "A named volume maps an exact host path, while a bind mount is fully managed by Docker",
+                "They are identical and the terms are interchangeable",
+                "Neither a bind mount nor a volume is able to persist data",
+              ],
+              a: [0],
+              e: "A bind mount ties the container to a precise host path; a named volume is managed by Docker in its own location. Both persist data, but the source and management differ.",
+            },
+            {
+              type: "multi",
+              q: "A Dockerfile runs 'COPY . .' early and then 'RUN pip install -r requirements.txt' later, so every code edit forces a full dependency reinstall. The best fix is:",
+              o: [
+                "Copy requirements.txt first, run pip install, then COPY . . afterwards, so the dependency layer stays cached",
+                "Move the pip install to the very last line of the Dockerfile",
+                "Order all the instructions alphabetically",
+                "Clear the build cache before every build to be safe",
+              ],
+              a: [0],
+              e: "Docker rebuilds from the first changed layer down. Copying requirements and installing before copying the whole tree keeps the expensive install cached when only code changes.",
+            },
+            {
+              type: "multi",
+              q: "Which steps belong in a container CI/CD pipeline before deploying to production?",
+              o: [
+                "Run the automated test suite against the code",
+                "Scan the built image for known CVEs with a tool such as Trivy, Snyk, or Docker Scout",
+                "Build the image and push it to a registry",
+                "SSH into production and hand edit files inside the running container",
+              ],
+              a: [0, 1, 2],
+              e: "Test, scan for vulnerabilities, build, and push are standard automated stages. Hand editing a running production container by SSH is exactly what such automation replaces.",
+            },
+            {
+              type: "multi",
+              q: "Which components are part of the Kubernetes control plane rather than the worker node?",
+              o: [
+                "kube-apiserver, the cluster's front door",
+                "etcd, the key value store of cluster state",
+                "the scheduler, which assigns pods to nodes",
+                "the kubelet, which starts and supervises pods on a node",
+              ],
+              a: [0, 1, 2],
+              e: "API server, etcd, scheduler, and controllers form the control plane. The kubelet runs on each worker node and executes pods, so it is not a control plane component.",
+            },
+            {
+              type: "multi",
+              q: "You need one external HTTPS hostname to route /api to one application and /web to another. Which Kubernetes object is designed for this?",
+              o: [
+                "An Ingress with host and path rules pointing at the two Services",
+                "A single ClusterIP Service exposing both paths by URL",
+                "A ReplicaSet that routes traffic by URL",
+                "Editing the etcd store by hand for each incoming request",
+              ],
+              a: [0],
+              e: "An Ingress maps host and path rules to backend Services, which then load balance to their pods. Services do not route by URL path and ReplicaSets do not handle routing.",
+            },
+            {
+              type: "multi",
+              q: "A Deployment specifies 5 replicas and all 5 are healthy. You manually delete 2 pods. What does Kubernetes do?",
+              o: [
+                "Reconciles back to 5 by scheduling 2 replacement pods",
+                "Leaves 3 running because you intervened manually",
+                "Deletes the Deployment to make reality match",
+                "Scales up to 7 to compensate for the disruption",
+              ],
+              a: [0],
+              e: "The control loop compares desired (5) with actual (3) and creates 2 new pods to restore the desired count. This is self healing.",
+            },
+            {
+              type: "multi",
+              q: "An Fn/FaaS cluster suddenly receives 500 requests for the same function all at once. What do you expect it to do?",
+              o: [
+                "Spin up additional function containers as needed, governed by a requests per container ratio, not necessarily 500 separate containers",
+                "Immediately create exactly 500 containers, one per request, every single time",
+                "Reject 499 of the requests and serve only the first",
+                "Run all 500 inside one container strictly sequentially with no scaling",
+              ],
+              a: [0],
+              e: "FaaS platforms autoscale by spinning up more function containers according to a concurrency or requests per container target, so the number of containers is driven by that ratio rather than blindly matching request count.",
+            },
+            {
+              type: "multi",
+              q: "In a FaaS platform, one request hits an unhandled exception and crashes the function instance handling it. What happens to the rest of the cluster?",
+              o: [
+                "Other requests keep being served by other instances; only that single invocation is lost",
+                "The whole cluster stops serving that function permanently",
+                "Every in flight request across all functions is rolled back",
+                "The platform deletes the function's code from the registry",
+              ],
+              a: [0],
+              e: "Function invocations are isolated. A crash affects only that invocation; the platform keeps serving other requests with other (or fresh) instances.",
+            },
+            {
+              type: "multi",
+              q: "Which workloads are poor fits for serverless functions?",
+              o: [
+                "A six hour nightly batch ETL job",
+                "A steady, 24/7 high request rate service where an always on server is cheaper",
+                "A workload needing large in memory state retained across invocations",
+                "Generating a thumbnail whenever an image is uploaded",
+              ],
+              a: [0, 1, 2],
+              e: "Long running jobs (which hit execution limits), constant high volume traffic, and heavy cross invocation state all fit serverless poorly. The short, event driven thumbnail task is an ideal fit.",
+            },
+            {
+              type: "multi",
+              q: "During a long running RDD transformation on a six worker Apache Spark cluster, one worker node crashes. What is the appropriate response?",
+              o: [
+                "Do nothing: Spark recomputes the lost partitions from the RDD lineage on the surviving workers",
+                "Stop and restart the entire job, since the data is certainly lost",
+                "Manually copy the missing partitions out of the master's memory",
+                "Switch the job into client mode to recover the lost data",
+              ],
+              a: [0],
+              e: "RDDs are fault tolerant through lineage. Spark re derives only the lost partitions from their parent transformations on the remaining workers, so the job continues without a manual restart.",
+            },
+            {
+              type: "multi",
+              q: "A four node CouchDB cluster uses n=2 (replicas) and q=8 (shards). One node crashes. What happens to the documents that lived on it?",
+              o: [
+                "All documents are still retrievable, because a second replica of each shard exists on another node",
+                "Exactly 25% of the documents are permanently lost",
+                "The cluster must elect a new master before any reads can succeed",
+                "All reads and writes stop until the crashed node returns",
+              ],
+              a: [0],
+              e: "With n=2 every shard has a copy on a second node, so a single node failure loses no data. CouchDB is also peer based, so there is no single master to re elect.",
+            },
+            {
+              type: "multi",
+              q: "Which statements about the CAP theorem and a partition tolerant store are correct?",
+              o: [
+                "During a network partition you must trade off consistency against availability",
+                "Cassandra and DynamoDB are typically AP: available and eventually consistent",
+                "A classic single node SQL database is CA: it assumes that no partition occurs",
+                "CAP guarantees you can have consistency, availability, and partition tolerance all at once",
+              ],
+              a: [0, 1, 2],
+              e: "Partition tolerance is effectively mandatory in a distributed store, so the real choice under a partition is C versus A. Cassandra and DynamoDB lean AP; a single node SQL database is CA. CAP's whole point is that all three cannot be guaranteed at once.",
+            },
+            {
+              type: "multi",
+              q: "Which cloud security statements are correct?",
+              o: [
+                "Authentication proves identity while authorisation decides what that identity may do, so you can be authenticated yet unauthorised for an action",
+                "Keystone is the OpenStack component largely responsible for identity and security, and it is checked on API calls",
+                "Single sign on, such as Shibboleth via the Australian Access Federation, lets one institutional login reach many services",
+                "Accounting means encrypting data at rest so that it cannot be read",
+              ],
+              a: [0, 1, 2],
+              e: "Authentication versus authorisation, Keystone as the identity service, and SSO/federation via the AAF are all correct. Accounting is about tracking resource usage for billing, not encryption.",
+            },
+            {
+              type: "long",
+              q: "In Assignment 2 your team built a Cloud based solution for ingesting, processing, and analysing social media data. At the back end you ran an ElasticSearch database and a RESTful API built on Fission, reached through a Jupyter Notebook. You now wish to protect access so that only members of your team and Professor Sinnott can use the system. Attempt each part yourself, then reveal the model answer.",
+              parts: [
+                {
+                  label: "A)",
+                  prompt: "You want to ensure only specific, known people can use the RESTful API. What security concept is required?",
+                  marks: "1 mark",
+                  answer: "<strong>Authentication.</strong> Proving the identity of whoever is calling the API (for example via a password, token, certificate, or federated login) so that only known users are admitted.",
+                },
+                {
+                  label: "B)",
+                  prompt: "You now want to give Professor Sinnott direct read only access to your ElasticSearch database, and nothing more. What security concept governs this?",
+                  marks: "1 mark",
+                  answer: "<strong>Authorisation.</strong> Once an identity is authenticated, authorisation decides which resources and actions it may use. Here it grants read only access and denies writes or deletes.",
+                },
+                {
+                  label: "C)",
+                  prompt: "You hit a technical problem and need Professor Sinnott to log directly into your Cloud servers to help debug, without sharing any passwords. How do you enable this securely?",
+                  marks: "1 mark",
+                  answer: "Add Professor Sinnott's <strong>SSH public key</strong> to the server (its authorized_keys file). His private key stays securely with him, no password is exchanged, and access can later be revoked by removing the key.",
+                },
+                {
+                  label: "D)",
+                  prompt: "The University wishes to showcase your team's solution to all current and future COMP90024 students by introducing a new federated attribute (eduCOMP90024) into the University Identity Provider and releasing it across the Australian Access Federation. Discuss the technical and non technical challenges of rolling out this attribute.",
+                  marks: "7 marks",
+                  answer: "<strong>Non technical challenges:</strong><ul><li>The attribute definition has to be agreed across the whole federation, not just within one university.</li><li>Deciding who actually counts as a current or future student, and who curates and maintains that list over time.</li><li>Is it worth federating an attribute for just one small service? Governance, ownership, and ongoing support cost effort.</li><li>Lifecycle and privacy: revoking or expiring the attribute once students leave, and avoiding over sharing identity information.</li></ul><strong>Technical challenges:</strong><ul><li>The University Identity Provider must know how and when to release this attribute, and ideally only to this service rather than the entire federation.</li><li>The service must be a recognised AAF service provider with an allocated certificate so the federation trusts it.</li><li>The attribute has to be mapped into the application's authorisation logic, which must be extended to consume and act on it.</li><li>Ongoing maintenance and support after the showcase, including handling students who have finished the subject.</li></ul>",
+                },
+                {
+                  label: "E)",
+                  prompt: "Why would your team's small Cloud solution not itself be a suitable use case for the eduPerson attributes that Shibboleth uses to support single sign on through the AAF?",
+                  marks: "3 marks",
+                  answer: "<ul><li>It serves only a tiny subset of users (one team plus one staff member), so the cost and complexity of joining the federation far outweighs the benefit.</li><li>Becoming an AAF recognised service provider needs an allocated certificate, attribute release agreements, and ongoing maintenance, which is disproportionate for a short lived assignment service.</li><li>eduPerson attributes are general, federation wide identity attributes; they are not designed to gate one small, niche resource, and the IdP would have to be told to release them to just this service.</li></ul>",
+                },
+                {
+                  label: "F)",
+                  prompt: "A team member signs in to your web front end through the AAF on a public library PC and forgets to log out. A rival student then sits down at that PC and finds the live session. Describe a worst case scenario for your team.",
+                  marks: "2 marks",
+                  answer: "Because of single sign on, the rival inherits the team member's already authenticated session without needing any username or password. In the worst case they act as the team: reading or exfiltrating the data and then deleting the instances, the ElasticSearch database, and the entire application through the live SSO session, destroying the assignment work.",
+                },
+              ],
+            },
+          ],
+        },
       ];
 
       let currentTopic = 0,
@@ -2034,6 +2553,7 @@
         if (qIndex >= t.quiz.length) return showResults();
 
         const q = t.quiz[qIndex];
+        if (q.type === "long") return showLongQuestion(q, qIndex, t);
         const multi = isMulti(q);
 
         const card = document.createElement("div");
@@ -2139,6 +2659,99 @@
           showQuiz();
         };
         btnDiv.appendChild(skipBtn);
+
+        card.appendChild(btnDiv);
+        content.appendChild(card);
+      }
+
+      function showLongQuestion(q, qIndex, t) {
+        const content = document.getElementById("contentContainer");
+        content.innerHTML = "";
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const badge = document.createElement("span");
+        badge.className = "qtype multi";
+        badge.textContent = "Exam-style longer answer (15 marks)";
+        card.appendChild(badge);
+
+        const title = document.createElement("h2");
+        title.textContent = "Question " + (qIndex + 1) + " of " + t.quiz.length;
+        card.appendChild(title);
+
+        const progress = document.createElement("div");
+        progress.className = "progress";
+        const pBar = document.createElement("div");
+        pBar.className = "progress-bar";
+        pBar.style.width = ((qIndex + 1) / t.quiz.length) * 100 + "%";
+        progress.appendChild(pBar);
+        card.appendChild(progress);
+
+        const scenario = document.createElement("div");
+        scenario.className = "scenario";
+        scenario.innerHTML =
+          '<div class="scenario-prompt">Scenario</div><div class="scenario-text">' +
+          q.q +
+          "</div>";
+        card.appendChild(scenario);
+
+        const shells = [];
+        q.parts.forEach((p) => {
+          const partDiv = document.createElement("div");
+          partDiv.className = "la-part";
+
+          const prompt = document.createElement("div");
+          prompt.className = "la-prompt";
+          prompt.innerHTML =
+            "<strong>" +
+            p.label +
+            "</strong> " +
+            p.prompt +
+            ' <span class="la-marks">[' +
+            p.marks +
+            "]</span>";
+          partDiv.appendChild(prompt);
+
+          const shell = document.createElement("div");
+          shell.className = "opt-shell covered";
+          const ans = document.createElement("div");
+          ans.className = "opt-list la-answer";
+          ans.innerHTML = p.answer;
+          shell.appendChild(ans);
+          const veil = document.createElement("div");
+          veil.className = "cover-veil";
+          veil.style.cursor = "pointer";
+          veil.textContent =
+            "Draft your own answer first, then click to reveal the model answer.";
+          veil.onclick = () => shell.classList.remove("covered");
+          shell.appendChild(veil);
+          partDiv.appendChild(shell);
+          shells.push(shell);
+
+          card.appendChild(partDiv);
+        });
+
+        const btnDiv = document.createElement("div");
+        btnDiv.className = "button-row";
+
+        const revealBtn = document.createElement("button");
+        revealBtn.className = "btn btn-secondary";
+        revealBtn.textContent = "Reveal all model answers";
+        revealBtn.onclick = () =>
+          shells.forEach((s) => s.classList.remove("covered"));
+        btnDiv.appendChild(revealBtn);
+
+        const finishBtn = document.createElement("button");
+        finishBtn.className = "btn btn-primary";
+        finishBtn.textContent =
+          qIndex + 1 >= t.quiz.length ? "See Results" : "Next";
+        finishBtn.onclick = () => {
+          results[qIndex] = "reviewed";
+          currentQ++;
+          showQuiz();
+        };
+        btnDiv.appendChild(finishBtn);
 
         card.appendChild(btnDiv);
         content.appendChild(card);
